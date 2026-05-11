@@ -11,6 +11,7 @@ import {
   Database, 
   Layers, 
   Server,
+  Shield,
   ChevronRight,
   ExternalLink,
   LineChart,
@@ -404,14 +405,19 @@ export default function App() {
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200 w-full overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center relative">
-          <div className="flex flex-col">
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 uppercase">
-              Ахмед <span className="font-normal text-slate-500 hidden sm:inline">Себиев</span>
-            </h1>
-            <div className="flex gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-mono text-slate-400 mt-0.5 uppercase tracking-widest">
-              <span>Senior Engineer</span>
-              <span className="text-slate-200">•</span>
-              <span>2025</span>
+          <div className="flex items-center gap-3 group">
+            <div className="hidden sm:flex w-10 h-10 bg-slate-900 rounded-xl items-center justify-center text-emerald-500 shadow-2xl transition-transform group-hover:rotate-12 duration-500 shrink-0">
+               <Code2 size={24} />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 uppercase leading-none">
+                Ахмед <span className="font-normal text-slate-500">Себиев</span>
+              </h1>
+              <div className="flex gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-widest leading-none">
+                <span>Senior Engineer</span>
+                <span className="text-slate-200">•</span>
+                <span>2025</span>
+              </div>
             </div>
           </div>
 
@@ -487,9 +493,8 @@ export default function App() {
                     <span className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest rounded-full">
                       9+ Лет Опыта • Fullstack Expert
                     </span>
-                    <h2 className="text-6xl md:text-8xl font-bold tracking-tighter text-slate-900 leading-[0.85]">
-                      ENGINEERING <br />
-                      <span className="gradient-text">INTELLIGENCE.</span>
+                    <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter text-slate-900 leading-[0.8] uppercase whitespace-normal break-normal text-balance">
+                      Engineering Intelligence.
                     </h2>
                     <p className="text-xl text-slate-500 max-w-2xl font-medium leading-relaxed">
                       Я — Ахмед Себиев, фулстек-разработчик с глубокой экспертизой в бэкенде. 
@@ -697,10 +702,10 @@ export default function App() {
                   <Tag size={14} />
                   <span>Весенняя акция: -40% на всё</span>
                 </motion.div>
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Сервисы & Тарифы 2025</h2>
-                <p className="text-slate-500 text-sm sm:text-lg font-medium">
-                  Прозрачное ценообразование на основе рыночных показателей Москвы. 
-                  Индивидуальный подход к каждой бизнес-задаче.
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">Сервисы & <span className="text-slate-400">Тарифы</span></h2>
+                <p className="text-slate-500 text-sm sm:text-lg font-medium max-w-2xl mx-auto text-balance">
+                  Прозрачное ценообразование на основе рыночных показателей. 
+                  Каждая деталь проекта имеет значение для конечного результата.
                 </p>
               </div>
 
@@ -780,9 +785,15 @@ export default function App() {
                   </div>
 
                   <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-between h-fit shadow-2xl relative">
-                    <div className="absolute -top-4 -left-4 bg-rose-500 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
-                       <Tag size={12} />
-                       <span>Sale -40%</span>
+                    <div className="absolute -top-4 -left-4 flex flex-col gap-2">
+                      <div className="bg-rose-500 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
+                        <Tag size={12} />
+                        <span>Sale -40%</span>
+                      </div>
+                      <div className="bg-slate-900 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
+                         <Shield size={12} className="text-emerald-500" />
+                         <span>Certified KP</span>
+                      </div>
                     </div>
                     <div className="space-y-6">
                        <div className="space-y-4">
@@ -790,41 +801,52 @@ export default function App() {
                              <span>Компонент</span>
                              <span>Цена</span>
                           </div>
-                          <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
-                             <div className="flex justify-between text-sm font-bold">
-                                <span>Базовая разработка</span>
-                                <div className="text-right">
-                                  <span className="line-through text-slate-300 mr-2 text-[10px]">120 000 ₽</span>
-                                  <span>72 000 ₽</span>
+                          <div className="space-y-4 max-h-[250px] overflow-y-auto custom-scrollbar pr-2">
+                             <div className="flex justify-between items-center text-sm font-bold">
+                                <span className="text-slate-600">Базовая разработка</span>
+                                <div className="text-right flex flex-col items-end">
+                                  <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">120 000 ₽</span>
+                                  <span className="text-emerald-600 whitespace-nowrap font-mono tracking-tighter">72 000 ₽</span>
                                 </div>
                              </div>
                              {selectedCMS && selectedCMS.id !== 'none' && (
-                               <div className="flex justify-between text-sm font-medium text-slate-500">
-                                  <span>{selectedCMS.label}</span>
-                                  <div className="text-right">
-                                    <span className="line-through text-slate-300 mr-2 text-[10px]">+{selectedCMS.price.toLocaleString()} ₽</span>
-                                    <span>+{(selectedCMS.price * 0.6).toLocaleString()} ₽</span>
+                               <div className="flex justify-between items-center text-sm font-medium">
+                                  <span className="text-slate-500">{selectedCMS.label}</span>
+                                  <div className="text-right flex flex-col items-end">
+                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">+{selectedCMS.price.toLocaleString('ru-RU')} ₽</span>
+                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">+{(selectedCMS.price * 0.6).toLocaleString('ru-RU')} ₽</span>
                                   </div>
                                </div>
                              )}
                              {selectedType && selectedType.id !== 'none' && (
-                               <div className="flex justify-between text-sm font-medium text-slate-500">
-                                  <span>{selectedType.label}</span>
-                                  <div className="text-right">
-                                    <span className="line-through text-slate-300 mr-2 text-[10px]">{selectedType.price.toLocaleString()} ₽</span>
-                                    <span>{(selectedType.price * 0.6).toLocaleString()} ₽</span>
+                               <div className="flex justify-between items-center text-sm font-medium">
+                                  <span className="text-slate-500">{selectedType.label}</span>
+                                  <div className="text-right flex flex-col items-end">
+                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">{selectedType.price.toLocaleString('ru-RU')} ₽</span>
+                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">{(selectedType.price * 0.6).toLocaleString('ru-RU')} ₽</span>
                                   </div>
                                </div>
                              )}
                              {selectedFeaturesList.map(f => (
-                               <div key={f.id} className="flex justify-between text-sm font-medium text-slate-500">
-                                  <span>{f.label}</span>
-                                  <div className="text-right">
-                                    <span className="line-through text-slate-300 mr-2 text-[10px]">+{f.price.toLocaleString()} ₽</span>
-                                    <span>+{(f.price * 0.6).toLocaleString()} ₽</span>
+                               <div key={f.id} className="flex justify-between items-center text-sm font-medium">
+                                  <span className="text-slate-500">{f.label}</span>
+                                  <div className="text-right flex flex-col items-end">
+                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">+{f.price.toLocaleString('ru-RU')} ₽</span>
+                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">+{(f.price * 0.6).toLocaleString('ru-RU')} ₽</span>
                                   </div>
                                </div>
                              ))}
+                             
+                             <div className="pt-2 mt-2 border-t border-slate-50 space-y-1">
+                               <div className="flex justify-between text-[10px] font-bold text-emerald-500 uppercase">
+                                 <span>SEO Оптимизация</span>
+                                 <span>Бесплатно (Bonus)</span>
+                               </div>
+                               <div className="flex justify-between text-[10px] font-bold text-emerald-500 uppercase">
+                                 <span>Безопасность (OWASP)</span>
+                                 <span>Бесплатно (Bonus)</span>
+                               </div>
+                             </div>
                           </div>
                        </div>
                        
@@ -836,12 +858,12 @@ export default function App() {
                                Экономия 40%
                             </div>
                          </div>
-                         <div className="flex items-baseline gap-3">
-                           <div className="text-4xl sm:text-5xl font-bold tracking-tighter text-slate-900 leading-none">
-                             {calculateTotal().toLocaleString()} <span className="text-xl font-normal text-slate-400">₽</span>
+                         <div className="flex items-baseline gap-2 flex-wrap">
+                           <div className="text-4xl sm:text-5xl font-bold tracking-tighter text-slate-900 leading-none font-mono whitespace-nowrap">
+                             {calculateTotal().toLocaleString('ru-RU')} <span className="text-xl font-normal text-slate-400">₽</span>
                            </div>
-                           <div className="text-lg font-bold text-slate-300 line-through">
-                             {getOriginalTotal().toLocaleString()} ₽
+                           <div className="text-base font-bold text-slate-300 line-through font-mono whitespace-nowrap">
+                             {getOriginalTotal().toLocaleString('ru-RU')} ₽
                            </div>
                          </div>
                        </div>
@@ -870,8 +892,8 @@ export default function App() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {PRICING_TIERS.map((tier) => {
                   const originalPriceValue = parseInt(tier.price.replace(/[^\d]/g, ''));
-                  const discountedPrice = Math.round(originalPriceValue * 0.6).toLocaleString();
-                  const originalPrice = originalPriceValue.toLocaleString();
+                  const discountedPrice = Math.round(originalPriceValue * 0.6).toLocaleString('ru-RU');
+                  const originalPrice = originalPriceValue.toLocaleString('ru-RU');
 
                   return (
                     <div key={tier.id} className={cn("sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden", tier.recommended && "ring-2 ring-slate-900 shadow-2xl")}>
@@ -880,22 +902,34 @@ export default function App() {
                       
                       <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{tier.name}</h4>
                       <div className="flex flex-col mb-6">
-                        <div className="text-sm font-bold text-slate-300 line-through">от {originalPrice} ₽</div>
-                        <div className="text-3xl sm:text-4xl font-bold text-slate-900">от {discountedPrice} ₽</div>
+                        <div className="text-sm font-bold text-slate-300 line-through font-mono whitespace-nowrap">от {originalPrice} ₽</div>
+                        <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-mono tracking-tighter leading-none whitespace-nowrap">от {discountedPrice} ₽</div>
                       </div>
                       
-                      <p className="text-sm text-slate-500 mb-8 font-medium">{tier.description}</p>
-                      <div className="space-y-4 mb-12 flex-1 w-full">
+                      <p className="text-sm text-slate-500 mb-8 font-medium h-12 overflow-hidden line-clamp-2 leading-relaxed">{tier.description}</p>
+                      <div className="space-y-4 mb-8 flex-1 w-full">
                         {tier.features.map((f, i) => (
                           <div key={i} className="flex items-start gap-3 text-sm font-bold text-slate-700">
                             <CheckCircle2 size={18} className="text-emerald-500 shrink-0 mt-0.5" />
-                            <span>{f}</span>
+                            <span className="leading-tight">{f}</span>
                           </div>
                         ))}
                       </div>
+
+                      <div className="w-full bg-slate-50 p-4 rounded-xl mb-8 space-y-2 border border-slate-100">
+                         <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
+                            <ShieldCheck size={12} />
+                            <span>Security+ Bonus</span>
+                         </div>
+                         <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
+                            <TrendingUp size={12} />
+                            <span>SEO Basic Bonus</span>
+                         </div>
+                      </div>
+
                       <button 
                         onClick={() => {setFormState({...formState, tier: tier.name}); setIsContactOpen(true);}}
-                        className={cn("w-full py-4 rounded-xl font-bold transition-all", tier.recommended ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600")}
+                        className={cn("w-full py-4 rounded-xl font-bold transition-all active:scale-95", tier.recommended ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200")}
                       >
                         Заказать со скидкой
                       </button>
@@ -1003,7 +1037,7 @@ export default function App() {
 
               <div 
                 ref={drawerContentRef}
-                className="flex-1 overflow-y-auto pr-2 custom-scrollbar no-scrollbar scroll-smooth"
+                className="flex-1 overflow-y-auto pr-2 custom-scrollbar scroll-smooth"
               >
                 <AnimatePresence mode="wait">
                   {!isFormSubmitted ? (
@@ -1013,59 +1047,78 @@ export default function App() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       onSubmit={handleApply} 
-                      className="space-y-8"
+                      className="space-y-6 pt-2 pb-10"
                     >
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Как вас зовут?</label>
-                        <input 
-                          required
-                          type="text" 
-                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
-                          placeholder="Александр"
-                          value={formState.name}
-                          onChange={e => setFormState({...formState, name: e.target.value})}
-                        />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
+                        <div className="space-y-1 group relative">
+                          <input 
+                            required
+                            autoFocus
+                            type="text" 
+                            name="name"
+                            autoComplete="name"
+                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg bg-transparent" 
+                            placeholder=" "
+                            value={formState.name}
+                            onChange={e => setFormState({...formState, name: e.target.value})}
+                          />
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
+                             Как вас зовут?
+                          </label>
+                        </div>
+                        <div className="space-y-1 group relative">
+                          <input 
+                            required
+                            type="tel" 
+                            name="tel"
+                            autoComplete="tel"
+                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg bg-transparent" 
+                            placeholder=" "
+                            value={formState.phone}
+                            onChange={e => setFormState({...formState, phone: e.target.value})}
+                          />
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
+                             Телефон
+                          </label>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email или Telegram</label>
+                      
+                      <div className="space-y-1 group relative">
                         <input 
                           required
                           type="text" 
-                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
-                          placeholder="@alex_ceo"
+                          name="contact"
+                          autoComplete="off"
+                          className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg bg-transparent" 
+                          placeholder=" "
                           value={formState.contact}
                           onChange={e => setFormState({...formState, contact: e.target.value})}
                         />
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
+                           Email или Telegram
+                        </label>
                       </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Телефон</label>
-                        <input 
-                          required
-                          type="tel" 
-                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
-                          placeholder="+7 (999) 000-00-00"
-                          value={formState.phone}
-                          onChange={e => setFormState({...formState, phone: e.target.value})}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Опишите задачу</label>
+
+                      <div className="space-y-1 group relative">
                         <textarea 
                           required
-                          rows={3} 
-                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl resize-none" 
-                          placeholder="Например: Нужна ERP система для логистики..."
+                          rows={2} 
+                          className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg resize-none bg-transparent" 
+                          placeholder=" "
                           value={formState.message}
                           onChange={e => setFormState({...formState, message: e.target.value})}
                         />
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
+                           Опишите задачу
+                        </label>
                       </div>
                       
-                      <div className="pt-4">
+                      <div className="pt-6">
                         <button 
                           disabled={isSubmitting}
                           type="submit" 
                           className={cn(
-                            "w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3",
+                            "w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 hover:bg-slate-800",
                             isSubmitting && "opacity-50 cursor-not-allowed"
                           )}
                         >
@@ -1077,17 +1130,28 @@ export default function App() {
                           )}
                         </button>
                         
-                        <div className="mt-6 flex flex-col items-center gap-3">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Или в один клик</p>
-                          <a 
-                            href={`https://t.me/SebievTL?text=${encodeURIComponent(`Привет, Ахмед! Меня зовут ${formState.name}. Хочу проект: ${formState.message}`)}`} 
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-slate-900 font-bold hover:text-emerald-600 transition-colors"
-                          >
-                            <MessageSquare size={18} />
-                            <span>Написать в Telegram</span>
-                          </a>
+                        <div className="mt-8 flex flex-col items-center gap-3">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-t border-slate-100 w-full pt-8 text-center">Или свяжитесь напрямую</p>
+                          <div className="flex gap-2 w-full">
+                            <a 
+                              href={`https://t.me/SebievTL?text=${encodeURIComponent(`Привет! Я с сайта ${window.location.host}. Хочу обсудить проект.`)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 flex items-center justify-center gap-2 text-slate-900 font-bold hover:text-emerald-600 transition-colors py-3 bg-slate-50 rounded-2xl border border-slate-200 hover:bg-white"
+                            >
+                              <MessageSquare size={18} className="text-emerald-500" />
+                              <span>Telegram</span>
+                            </a>
+                            <a 
+                              href={`https://wa.me/79259409404?text=${encodeURIComponent(`Привет! Пишу по поводу разработки проекта.`)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 flex items-center justify-center gap-2 text-slate-900 font-bold hover:text-emerald-600 transition-colors py-3 bg-slate-50 rounded-2xl border border-slate-200 hover:bg-white"
+                            >
+                              <Phone size={18} className="text-emerald-500" />
+                              <span>WhatsApp</span>
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </motion.form>
@@ -1096,10 +1160,15 @@ export default function App() {
                       key="success-message"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center text-center space-y-8 py-8"
+                      className="flex flex-col items-center text-center space-y-8 py-4"
                     >
-                      <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500">
-                        <CheckCircle2 size={40} />
+                      <div className="relative">
+                        <div className="w-24 h-24 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-2xl rotate-3">
+                           <Code2 size={48} className="text-emerald-500" />
+                           <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-slate-900 shadow-lg -rotate-12">
+                              <CheckCircle2 size={16} strokeWidth={3} />
+                           </div>
+                        </div>
                       </div>
                       <div className="space-y-3">
                         <h4 className="text-2xl font-bold text-slate-900">Заявка принята!</h4>
