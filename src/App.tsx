@@ -297,8 +297,9 @@ export default function App() {
       alert('Пожалуйста, введите корректный номер телефона.');
       return;
     }
-    setIsSubmitting(true);
+    
     try {
+      setIsSubmitting(true);
       const finalData = {
         ...formState,
         total: calculateTotal(),
@@ -309,9 +310,16 @@ export default function App() {
           total: calculateTotal()
         } : null
       };
+
       await submitLead(finalData);
       setIsFormSubmitted(true);
+      
+      // Auto-scroll to top of drawer on success
+      if (drawerContentRef.current) {
+        drawerContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     } catch (err) {
+      console.error("Submission error:", err);
       alert('Произошла ошибка при отправке. Пожалуйста, напишите в Telegram напрямую.');
     } finally {
       setIsSubmitting(false);
@@ -1017,28 +1025,40 @@ export default function App() {
                       key="success-message"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center text-center space-y-10 py-12"
+                      className="flex flex-col items-center text-center space-y-8 py-8"
                     >
-                      <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
-                        <PartyPopper size={48} />
+                      <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500">
+                        <CheckCircle2 size={40} />
                       </div>
-                      <div className="space-y-4">
-                        <h4 className="text-2xl font-bold text-slate-900">Заявка получена!</h4>
-                        <p className="text-slate-500 font-medium">
-                          Спасибо за доверие, {formState.name}. Ахмед изучит детали и свяжется с вами в течение 2-х часов.
+                      <div className="space-y-3">
+                        <h4 className="text-2xl font-bold text-slate-900">Заявка принята!</h4>
+                        <p className="text-slate-500 font-medium text-sm sm:text-base leading-relaxed">
+                          Спасибо за доверие, {formState.name}! <br/> Я получил данные и отвечу вам в ближайшее время.
                         </p>
                       </div>
-                      <div className="w-full space-y-4">
+
+                      <div className="w-full grid grid-cols-1 gap-3">
                          <button 
                            onClick={downloadCP}
-                           className="w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-slate-900 hover:bg-white hover:text-slate-900"
+                           className="w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-slate-900 hover:bg-white hover:text-slate-900 group"
                          >
-                           <Download size={20} />
+                           <Download size={20} className="group-hover:translate-y-1 transition-transform" />
                            <span>Скачать КП (PDF)</span>
                          </button>
+
+                         <a 
+                            href={`https://t.me/SebievTL?text=${encodeURIComponent(`Ахмед, я только что отправил расчет проекта с сайта! Меня зовут ${formState.name}.`)}`} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full bg-slate-50 text-slate-900 py-5 rounded-2xl text-lg font-bold border border-slate-100 transition-all active:scale-95 flex items-center justify-center gap-3 hover:bg-white hover:border-emerald-200"
+                         >
+                            <MessageSquare size={20} className="text-emerald-500" />
+                            <span>Написать в Telegram</span>
+                         </a>
+
                          <button 
                            onClick={closeContact}
-                           className="w-full text-slate-500 font-bold py-4 hover:text-slate-900 transition-colors bg-slate-50 rounded-xl"
+                           className="w-full text-slate-400 font-bold py-4 hover:text-slate-900 transition-colors"
                          >
                            Вернуться на сайт
                          </button>
