@@ -219,6 +219,7 @@ export default function App() {
   const [projectFilter, setProjectFilter] = useState<'All' | 'Backend' | 'Web' | 'Infra'>('All');
   const [lang, setLang] = useState<'RU' | 'EN'>('RU');
   
+  const drawerContentRef = useRef<HTMLDivElement>(null);
   // Calculator State
   const [calcCMS, setCalcCMS] = useState('none');
   const [calcType, setCalcType] = useState('new');
@@ -251,12 +252,21 @@ export default function App() {
   });
 
   useEffect(() => {
+    if (isContactOpen && drawerContentRef.current) {
+      drawerContentRef.current.scrollTo(0, 0);
+    }
     if (isContactOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
   }, [isContactOpen]);
+
+  useEffect(() => {
+    if (isFormSubmitted && drawerContentRef.current) {
+      drawerContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [isFormSubmitted]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -884,7 +894,7 @@ export default function App() {
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="fixed right-0 top-0 bottom-0 w-full max-w-xl bg-white z-[70] shadow-2xl p-6 sm:p-12 flex flex-col overflow-hidden"
             >
-              <div className="flex justify-between items-center mb-8 sm:mb-16">
+              <div className="flex justify-between items-center mb-6 sm:mb-12 shrink-0 bg-white z-10">
                 <AnimatePresence mode="wait">
                   {!isFormSubmitted ? (
                     <motion.div 
@@ -893,8 +903,8 @@ export default function App() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                     >
-                      <h3 className="text-3xl sm:text-4xl font-bold tracking-tight">Новый проект</h3>
-                      {formState.tier && <span className="text-xs font-bold text-emerald-600 uppercase mt-2 block">Выбран тариф: {formState.tier}</span>}
+                      <h3 className="text-2xl sm:text-4xl font-bold tracking-tight">Новый проект</h3>
+                      {formState.tier && <span className="text-[10px] font-bold text-emerald-600 uppercase mt-1 block">Тариф: {formState.tier}</span>}
                     </motion.div>
                   ) : (
                     <motion.div 
@@ -903,16 +913,19 @@ export default function App() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                     >
-                      <h3 className="text-3xl sm:text-4xl font-bold tracking-tight text-emerald-600">Готово!</h3>
+                      <h3 className="text-2xl sm:text-4xl font-bold tracking-tight text-emerald-600">Готово!</h3>
                     </motion.div>
                   )}
                 </AnimatePresence>
-                <button onClick={closeContact} className="p-3 hover:bg-slate-100 rounded-full transition-all">
+                <button onClick={closeContact} className="p-2 sm:p-3 hover:bg-slate-100 rounded-full transition-all shrink-0">
                   <X size={24} />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar no-scrollbar">
+              <div 
+                ref={drawerContentRef}
+                className="flex-1 overflow-y-auto pr-2 custom-scrollbar no-scrollbar scroll-smooth"
+              >
                 <AnimatePresence mode="wait">
                   {!isFormSubmitted ? (
                     <motion.form 
@@ -960,7 +973,7 @@ export default function App() {
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Опишите задачу</label>
                         <textarea 
                           required
-                          rows={4} 
+                          rows={3} 
                           className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl resize-none" 
                           placeholder="Например: Нужна ERP система для логистики..."
                           value={formState.message}
@@ -968,21 +981,36 @@ export default function App() {
                         />
                       </div>
                       
-                      <button 
-                        disabled={isSubmitting}
-                        type="submit" 
-                        className={cn(
-                          "w-full bg-slate-900 text-white py-6 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3",
-                          isSubmitting && "opacity-50 cursor-not-allowed"
-                        )}
-                      >
-                        {isSubmitting ? 'Отправка...' : (
-                          <>
-                            <span>Отправить запрос</span>
-                            <Send size={20} />
-                          </>
-                        )}
-                      </button>
+                      <div className="pt-4">
+                        <button 
+                          disabled={isSubmitting}
+                          type="submit" 
+                          className={cn(
+                            "w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3",
+                            isSubmitting && "opacity-50 cursor-not-allowed"
+                          )}
+                        >
+                          {isSubmitting ? 'Отправка...' : (
+                            <>
+                              <span>Отправить запрос</span>
+                              <Send size={20} />
+                            </>
+                          )}
+                        </button>
+                        
+                        <div className="mt-6 flex flex-col items-center gap-3">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Или в один клик</p>
+                          <a 
+                            href={`https://t.me/SebievTL?text=${encodeURIComponent(`Привет, Ахмед! Меня зовут ${formState.name}. Хочу проект: ${formState.message}`)}`} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-slate-900 font-bold hover:text-emerald-600 transition-colors"
+                          >
+                            <MessageSquare size={18} />
+                            <span>Написать в Telegram</span>
+                          </a>
+                        </div>
+                      </div>
                     </motion.form>
                   ) : (
                     <motion.div 
@@ -1003,7 +1031,7 @@ export default function App() {
                       <div className="w-full space-y-4">
                          <button 
                            onClick={downloadCP}
-                           className="w-full bg-slate-900 text-white py-6 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-slate-900 hover:bg-white hover:text-slate-900"
+                           className="w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-slate-900 hover:bg-white hover:text-slate-900"
                          >
                            <Download size={20} />
                            <span>Скачать КП (PDF)</span>
@@ -1012,7 +1040,7 @@ export default function App() {
                            onClick={closeContact}
                            className="w-full text-slate-500 font-bold py-4 hover:text-slate-900 transition-colors bg-slate-50 rounded-xl"
                          >
-                           Закрыть окно
+                           Вернуться на сайт
                          </button>
                       </div>
                     </motion.div>

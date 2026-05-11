@@ -31,6 +31,7 @@ async function startServer() {
 
     const text = `
 🚀 *Новая заявка!*
+🌐 *Источник:* https://sebiev-it.vercel.app/
 👤 *Имя:* ${name}
 📞 *Телефон:* ${phone}
 📧 *Контакт:* ${contact}
