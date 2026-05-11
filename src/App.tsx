@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { 
   Terminal, 
@@ -27,10 +27,13 @@ import {
   ArrowUp,
   Share2,
   Star,
-  Quote
+  Quote,
+  Download,
+  PartyPopper
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { submitLead } from './firebase';
+import { generateCP } from './utils/pdfGenerator';
 
 // --- DATA ---
 const REVIEWS = [
@@ -199,11 +202,11 @@ const SectionHeading = ({ children, subtitle }: { children: React.ReactNode, sub
     <motion.h2 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
-      className="text-4xl font-bold tracking-tight text-slate-900"
+      className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900"
     >
       {children}
     </motion.h2>
-    {subtitle && <p className="text-slate-500 mt-2 max-w-2xl font-medium">{subtitle}</p>}
+    {subtitle && <p className="text-slate-500 mt-2 max-w-2xl font-medium text-sm sm:text-base">{subtitle}</p>}
   </div>
 );
 
@@ -211,6 +214,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'pricing'>('portfolio');
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [projectFilter, setProjectFilter] = useState<'All' | 'Backend' | 'Web' | 'Infra'>('All');
   const [lang, setLang] = useState<'RU' | 'EN'>('RU');
@@ -220,14 +224,21 @@ export default function App() {
   const [calcType, setCalcType] = useState('new');
   const [calcFeatures, setCalcFeatures] = useState<string[]>([]);
   
+  const reviewsRef = useRef<HTMLDivElement>(null);
+  const [sliderConstraints, setSliderConstraints] = useState({ right: 0, left: 0 });
+
   const [formState, setFormState] = useState({ name: '', contact: '', phone: '', message: '', tier: '' });
+
+  const selectedCMS = CALCULATOR_OPTIONS.cms.find(c => c.id === calcCMS);
+  const selectedType = CALCULATOR_OPTIONS.type.find(t => t.id === calcType);
+  const selectedFeaturesList = CALCULATOR_OPTIONS.features.filter(f => calcFeatures.includes(f.id));
 
   const calculateTotal = () => {
     let total = 120000; // Base price
-    total += CALCULATOR_OPTIONS.cms.find(c => c.id === calcCMS)?.price || 0;
-    total += CALCULATOR_OPTIONS.type.find(t => t.id === calcType)?.price || 0;
-    calcFeatures.forEach(fid => {
-      total += CALCULATOR_OPTIONS.features.find(f => f.id === fid)?.price || 0;
+    total += selectedCMS?.price || 0;
+    total += selectedType?.price || 0;
+    selectedFeaturesList.forEach(f => {
+      total += f.price;
     });
     return total;
   };
@@ -240,11 +251,34 @@ export default function App() {
   });
 
   useEffect(() => {
+    if (isContactOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isContactOpen]);
+
+  useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
+
+    const updateConstraints = () => {
+      if (reviewsRef.current) {
+        const fullWidth = reviewsRef.current.scrollWidth;
+        const visibleWidth = reviewsRef.current.offsetWidth;
+        setSliderConstraints({ right: 0, left: -(fullWidth - visibleWidth + 40) });
+      }
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', updateConstraints);
+    setTimeout(updateConstraints, 500); // Initial calculation
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateConstraints);
+    };
   }, []);
 
   const handleApply = async (e: React.FormEvent) => {
@@ -257,6 +291,7 @@ export default function App() {
     try {
       const finalData = {
         ...formState,
+        total: calculateTotal(),
         calculatorData: activeTab === 'pricing' ? {
           cms: calcCMS,
           type: calcType,
@@ -265,14 +300,31 @@ export default function App() {
         } : null
       };
       await submitLead(finalData);
-      alert('Заявка успешно отправлена! Ахмед свяжется с вами в ближайшее время.');
-      setIsContactOpen(false);
-      setFormState({ name: '', contact: '', phone: '', message: '', tier: '' });
+      setIsFormSubmitted(true);
     } catch (err) {
       alert('Произошла ошибка при отправке. Пожалуйста, напишите в Telegram напрямую.');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const downloadCP = () => {
+    generateCP({
+      name: formState.name || 'Клиент',
+      calcCMS,
+      calcType,
+      calcFeatures,
+      total: calculateTotal(),
+      options: CALCULATOR_OPTIONS
+    });
+  };
+
+  const closeContact = () => {
+    setIsContactOpen(false);
+    setTimeout(() => {
+      setIsFormSubmitted(false);
+      setFormState({ name: '', contact: '', phone: '', message: '', tier: '' });
+    }, 300);
   };
 
   const sharePortfolio = () => {
@@ -368,7 +420,7 @@ export default function App() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
-              "flex flex-col items-center gap-1 px-8 py-2 rounded-xl transition-all",
+              "flex flex-col items-center gap-1 px-4 sm:px-8 py-2 rounded-xl transition-all",
               activeTab === tab.id ? "bg-emerald-500 text-slate-900" : "text-white/60 hover:text-white"
             )}
           >
@@ -406,12 +458,12 @@ export default function App() {
                   </div>
 
                   <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-6 p-6 sleek-card">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 sleek-card w-full sm:w-auto">
                       <div className="flex flex-col">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Текущий рейт</span>
                         <span className="text-2xl font-bold text-slate-900">300 000 ₽ +</span>
                       </div>
-                      <div className="w-px h-10 bg-slate-200" />
+                      <div className="hidden sm:block w-px h-10 bg-slate-200" />
                       <div className="flex flex-col">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Локация</span>
                         <span className="text-lg font-bold text-slate-900">Москва / Remote</span>
@@ -419,15 +471,17 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                     <a href="https://t.me/SebievTL" className="sleek-button-primary flex items-center gap-2">
-                       <AnimatedIcon icon={MessageSquare} size={18} /> Telegram
+                  <div className="flex flex-col sm:flex-row gap-4">
+                     <a href="https://t.me/SebievTL" className="flex-1 sleek-button-primary flex items-center justify-center gap-3 py-4">
+                       <AnimatedIcon icon={MessageSquare} size={20} />
+                       <span className="font-bold">Telegram</span>
                      </a>
-                     <a href="tel:89259409404" className="sleek-button-secondary flex items-center gap-2">
-                       <AnimatedIcon icon={Phone} size={18} /> 8 925 940-94-04
+                     <a href="tel:89259409404" className="flex-1 sleek-button-secondary flex items-center justify-center gap-3 py-4">
+                       <AnimatedIcon icon={Phone} size={20} />
+                       <span className="font-bold">8 925 940-94-04</span>
                      </a>
-                     <button onClick={sharePortfolio} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-full hover:bg-slate-200 transition-colors">
-                       <AnimatedIcon icon={Share2} size={18} />
+                     <button onClick={sharePortfolio} className="w-14 h-14 hidden sm:flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors shrink-0">
+                       <AnimatedIcon icon={Share2} size={20} />
                      </button>
                   </div>
                 </div>
@@ -543,11 +597,12 @@ export default function App() {
                 <SectionHeading subtitle="Что говорят коллеги и клиенты о совместной работе.">
                   Отзывы
                 </SectionHeading>
-                <div className="relative group -mx-6 px-6">
+                <div className="relative group -mx-6 px-6 overflow-visible">
                    <motion.div 
+                     ref={reviewsRef}
                      className="flex gap-6 cursor-grab active:cursor-grabbing pb-8 pr-12"
                      drag="x"
-                     dragConstraints={{ right: 0, left: -800 }}
+                     dragConstraints={sliderConstraints}
                      whileTap={{ cursor: 'grabbing' }}
                    >
                      {REVIEWS.map((review, i) => (
@@ -611,16 +666,17 @@ export default function App() {
                      <div className="space-y-8">
                        <div className="space-y-4">
                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Платформа / CMS</label>
-                         <div className="grid grid-cols-2 gap-3">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                            {CALCULATOR_OPTIONS.cms.map(c => (
                              <button 
                                key={c.id} 
                                onClick={() => setCalcCMS(c.id)}
                                className={cn(
-                                 "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left",
-                                 calcCMS === c.id ? "bg-white text-slate-900 border-white" : "border-white/10 hover:border-white/30"
+                                 "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden group",
+                                 calcCMS === c.id ? "bg-white text-slate-900 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30"
                                )}
                              >
+                               {calcCMS === c.id && <motion.div layoutId="calcCMSactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500" />}
                                {c.label}
                                <div className="text-[10px] opacity-50">{c.price > 0 ? `+${c.price.toLocaleString()} ₽` : 'Базовая'}</div>
                              </button>
@@ -630,16 +686,17 @@ export default function App() {
 
                        <div className="space-y-4">
                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Тип работ</label>
-                         <div className="flex gap-3">
+                         <div className="flex flex-col sm:flex-row gap-3">
                            {CALCULATOR_OPTIONS.type.map(t => (
                              <button 
                                key={t.id} 
                                onClick={() => setCalcType(t.id)}
                                className={cn(
-                                 "flex-1 px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left",
-                                 calcType === t.id ? "bg-white text-slate-900 border-white" : "border-white/10 hover:border-white/30"
+                                 "flex-1 px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden",
+                                 calcType === t.id ? "bg-white text-slate-900 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30"
                                )}
                              >
+                               {calcType === t.id && <motion.div layoutId="calcTypeactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500" />}
                                {t.label}
                              </button>
                            ))}
@@ -671,28 +728,63 @@ export default function App() {
                      </div>
                   </div>
 
-                  <div className="lg:sticky lg:top-32 bg-white/5 border border-white/10 rounded-[2.5rem] p-10 flex flex-col justify-between h-fit">
-                    <div className="space-y-8">
-                       <div className="text-sm font-bold text-slate-500 uppercase">Оценочная стоимость</div>
-                       <div className="text-4xl sm:text-6xl font-bold tracking-tighter transition-all break-words">
-                         {calculateTotal().toLocaleString()} <span className="text-xl sm:text-2xl font-normal text-slate-500">₽</span>
-                       </div>
+                  <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-between h-fit shadow-2xl relative">
+                    <div className="absolute -top-4 -left-4 bg-emerald-500 text-slate-900 text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg">Детализация</div>
+                    <div className="space-y-6">
                        <div className="space-y-4">
-                          <div className="flex justify-between text-sm font-medium text-slate-400">
-                             <span>Срок разработки</span>
-                             <span className="text-white">от 10 рабочих дней</span>
+                          <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
+                             <span>Компонент</span>
+                             <span>Цена</span>
                           </div>
-                          <div className="flex justify-between text-sm font-medium text-slate-400">
+                          <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
+                             <div className="flex justify-between text-sm font-bold">
+                                <span>Базовая разработка</span>
+                                <span>120 000 ₽</span>
+                             </div>
+                             {selectedCMS && selectedCMS.id !== 'none' && (
+                               <div className="flex justify-between text-sm font-medium text-slate-500">
+                                  <span>{selectedCMS.label}</span>
+                                  <span>+{selectedCMS.price.toLocaleString()} ₽</span>
+                               </div>
+                             )}
+                             {selectedType && selectedType.id !== 'none' && (
+                               <div className="flex justify-between text-sm font-medium text-slate-500">
+                                  <span>{selectedType.label}</span>
+                                  <span>{selectedType.price.toLocaleString()} ₽</span>
+                               </div>
+                             )}
+                             {selectedFeaturesList.map(f => (
+                               <div key={f.id} className="flex justify-between text-sm font-medium text-slate-500">
+                                  <span>{f.label}</span>
+                                  <span>+{f.price.toLocaleString()} ₽</span>
+                               </div>
+                             ))}
+                          </div>
+                       </div>
+                       
+                       <div className="pt-6 border-t-2 border-dashed border-slate-100 space-y-4">
+                         <div className="text-xs font-bold text-slate-400 uppercase">Итоговая оценка</div>
+                         <div className="text-4xl sm:text-5xl font-bold tracking-tighter text-slate-900">
+                           {calculateTotal().toLocaleString()} <span className="text-xl font-normal text-slate-400">₽</span>
+                         </div>
+                       </div>
+
+                       <div className="space-y-3 pt-2">
+                          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                             <span>Срок</span>
+                             <span className="text-slate-900">от 10 рабочих дней</span>
+                          </div>
+                          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                              <span>Гарантия</span>
-                             <span className="text-white">12 месяцев</span>
+                             <span className="text-slate-900">12 месяцев</span>
                           </div>
                        </div>
                     </div>
                     <button 
                       onClick={() => setIsContactOpen(true)}
-                      className="w-full bg-emerald-500 text-slate-900 py-6 rounded-2xl font-bold text-lg mt-12 hover:bg-emerald-400 transition-all active:scale-95"
+                      className="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold text-base mt-10 hover:bg-slate-800 transition-all active:scale-95 shadow-xl shadow-slate-900/10"
                     >
-                      Обсудить проект
+                      Получить КП
                     </button>
                   </div>
                 </div>
@@ -790,80 +882,143 @@ export default function App() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-xl bg-white z-[70] shadow-2xl p-12 flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-full max-w-xl bg-white z-[70] shadow-2xl p-6 sm:p-12 flex flex-col overflow-hidden"
             >
-              <div className="flex justify-between items-center mb-16">
-                <div>
-                  <h3 className="text-4xl font-bold tracking-tight">Новый проект</h3>
-                  {formState.tier && <span className="text-xs font-bold text-emerald-600 uppercase mt-2 block">Выбран тариф: {formState.tier}</span>}
-                </div>
-                <button onClick={() => setIsContactOpen(false)} className="p-3 hover:bg-slate-100 rounded-full transition-all">
+              <div className="flex justify-between items-center mb-8 sm:mb-16">
+                <AnimatePresence mode="wait">
+                  {!isFormSubmitted ? (
+                    <motion.div 
+                      key="header-form"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <h3 className="text-3xl sm:text-4xl font-bold tracking-tight">Новый проект</h3>
+                      {formState.tier && <span className="text-xs font-bold text-emerald-600 uppercase mt-2 block">Выбран тариф: {formState.tier}</span>}
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key="header-success"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <h3 className="text-3xl sm:text-4xl font-bold tracking-tight text-emerald-600">Готово!</h3>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <button onClick={closeContact} className="p-3 hover:bg-slate-100 rounded-full transition-all">
                   <X size={24} />
                 </button>
               </div>
 
-              <form onSubmit={handleApply} className="space-y-8 flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Как вас зовут?</label>
-                  <input 
-                    required
-                    type="text" 
-                    className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
-                    placeholder="Александр"
-                    value={formState.name}
-                    onChange={e => setFormState({...formState, name: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email или Telegram</label>
-                  <input 
-                    required
-                    type="text" 
-                    className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
-                    placeholder="@alex_ceo"
-                    value={formState.contact}
-                    onChange={e => setFormState({...formState, contact: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Телефон</label>
-                  <input 
-                    required
-                    type="tel" 
-                    className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
-                    placeholder="+7 (999) 000-00-00"
-                    value={formState.phone}
-                    onChange={e => setFormState({...formState, phone: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Опишите задачу</label>
-                  <textarea 
-                    required
-                    rows={4} 
-                    className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl resize-none" 
-                    placeholder="Например: Нужна ERP система для логистики..."
-                    value={formState.message}
-                    onChange={e => setFormState({...formState, message: e.target.value})}
-                  />
-                </div>
-                
-                <button 
-                  disabled={isSubmitting}
-                  type="submit" 
-                  className={cn(
-                    "w-full bg-slate-900 text-white py-6 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3",
-                    isSubmitting && "opacity-50 cursor-not-allowed"
+              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar no-scrollbar">
+                <AnimatePresence mode="wait">
+                  {!isFormSubmitted ? (
+                    <motion.form 
+                      key="form-fields"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onSubmit={handleApply} 
+                      className="space-y-8"
+                    >
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Как вас зовут?</label>
+                        <input 
+                          required
+                          type="text" 
+                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
+                          placeholder="Александр"
+                          value={formState.name}
+                          onChange={e => setFormState({...formState, name: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email или Telegram</label>
+                        <input 
+                          required
+                          type="text" 
+                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
+                          placeholder="@alex_ceo"
+                          value={formState.contact}
+                          onChange={e => setFormState({...formState, contact: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Телефон</label>
+                        <input 
+                          required
+                          type="tel" 
+                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl" 
+                          placeholder="+7 (999) 000-00-00"
+                          value={formState.phone}
+                          onChange={e => setFormState({...formState, phone: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Опишите задачу</label>
+                        <textarea 
+                          required
+                          rows={4} 
+                          className="w-full py-4 border-b border-slate-200 focus:outline-none focus:border-slate-900 transition-colors font-bold text-lg sm:text-xl resize-none" 
+                          placeholder="Например: Нужна ERP система для логистики..."
+                          value={formState.message}
+                          onChange={e => setFormState({...formState, message: e.target.value})}
+                        />
+                      </div>
+                      
+                      <button 
+                        disabled={isSubmitting}
+                        type="submit" 
+                        className={cn(
+                          "w-full bg-slate-900 text-white py-6 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3",
+                          isSubmitting && "opacity-50 cursor-not-allowed"
+                        )}
+                      >
+                        {isSubmitting ? 'Отправка...' : (
+                          <>
+                            <span>Отправить запрос</span>
+                            <Send size={20} />
+                          </>
+                        )}
+                      </button>
+                    </motion.form>
+                  ) : (
+                    <motion.div 
+                      key="success-message"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex flex-col items-center text-center space-y-10 py-12"
+                    >
+                      <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                        <PartyPopper size={48} />
+                      </div>
+                      <div className="space-y-4">
+                        <h4 className="text-2xl font-bold text-slate-900">Заявка получена!</h4>
+                        <p className="text-slate-500 font-medium">
+                          Спасибо за доверие, {formState.name}. Ахмед изучит детали и свяжется с вами в течение 2-х часов.
+                        </p>
+                      </div>
+                      <div className="w-full space-y-4">
+                         <button 
+                           onClick={downloadCP}
+                           className="w-full bg-slate-900 text-white py-6 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-slate-900 hover:bg-white hover:text-slate-900"
+                         >
+                           <Download size={20} />
+                           <span>Скачать КП (PDF)</span>
+                         </button>
+                         <button 
+                           onClick={closeContact}
+                           className="w-full text-slate-500 font-bold py-4 hover:text-slate-900 transition-colors bg-slate-50 rounded-xl"
+                         >
+                           Закрыть окно
+                         </button>
+                      </div>
+                    </motion.div>
                   )}
-                >
-                  {isSubmitting ? 'Отправка...' : (
-                    <>
-                      <span>Отправить запрос</span>
-                      <Send size={20} />
-                    </>
-                  )}
-                </button>
-              </form>
+                </AnimatePresence>
+              </div>
 
               <div className="mt-12 pt-12 border-t border-slate-100">
                 <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">

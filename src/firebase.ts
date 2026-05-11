@@ -36,7 +36,7 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
   throw new Error(JSON.stringify(errInfo));
 }
 
-export async function submitLead(data: { name: string; contact: string; phone: string; message: string; tier?: string; calculatorData?: any }) {
+export async function submitLead(data: { name: string; contact: string; phone: string; message: string; tier?: string; total?: number; calculatorData?: any }) {
   const path = 'leads';
   try {
     const docRef = await addDoc(collection(db, path), {
@@ -44,6 +44,14 @@ export async function submitLead(data: { name: string; contact: string; phone: s
       status: 'new',
       createdAt: serverTimestamp(),
     });
+
+    // Notify Telegram via our server API
+    fetch('/api/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(err => console.error("Notification failed", err));
+
     return docRef.id;
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, path);
