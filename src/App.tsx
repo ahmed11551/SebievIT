@@ -237,6 +237,7 @@ export default function App() {
   const [calcCMS, setCalcCMS] = useState('none');
   const [calcType, setCalcType] = useState('new');
   const [calcFeatures, setCalcFeatures] = useState<string[]>([]);
+  const [formError, setFormError] = useState<string | null>(null);
   
   const reviewsRef = useRef<HTMLDivElement>(null);
   const [sliderConstraints, setSliderConstraints] = useState({ right: 0, left: 0 });
@@ -316,8 +317,9 @@ export default function App() {
 
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formState.phone.match(/^\+?[\d\s-]{10,20}$/)) {
-      alert('Пожалуйста, введите корректный номер телефона.');
+    setFormError(null);
+    if (!formState.phone.match(/^\+?[\d\s-]{10,24}$/)) {
+      setFormError('Пожалуйста, введите корректный номер телефона (минимум 10 цифр).');
       return;
     }
     
@@ -414,7 +416,7 @@ export default function App() {
                 Ахмед <span className="font-normal text-slate-500">Себиев</span>
               </h1>
               <div className="flex gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-widest leading-none">
-                <span>Senior Engineer</span>
+                <span>Ведущий инженер</span>
                 <span className="text-slate-200">•</span>
                 <span>2025</span>
               </div>
@@ -493,7 +495,7 @@ export default function App() {
                     <span className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest rounded-full">
                       9+ Лет Опыта • Fullstack Expert
                     </span>
-                    <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter text-slate-900 leading-[0.8] uppercase whitespace-normal break-normal text-balance">
+                    <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter text-slate-900 leading-[0.9] uppercase whitespace-normal break-normal text-balance">
                       Engineering Intelligence.
                     </h2>
                     <p className="text-xl text-slate-500 max-w-2xl font-medium leading-relaxed">
@@ -540,13 +542,13 @@ export default function App() {
                     >
                       <ShieldCheck size={32} />
                     </motion.div>
-                    <h4 className="text-xl sm:text-2xl font-bold mb-6">Stack Specs</h4>
+                    <h4 className="text-xl sm:text-2xl font-bold mb-6">Стек технологий</h4>
                     <div className="space-y-6">
                       {[
-                        { label: 'Runtime', val: 'Node.js / TS / NestJS', icon: Code2, color: 'text-blue-400' },
-                        { label: 'Infrastructure', val: 'K8s / Docker / CI', icon: Server, color: 'text-purple-400' },
-                        { label: 'Databases', val: 'PostgreSQL / Redis', icon: Database, color: 'text-orange-400' },
-                        { label: 'Frontend', val: 'React / Next.js / Vue', icon: Globe, color: 'text-emerald-400' }
+                        { label: 'Среда исполнения', val: 'Node.js / TS / NestJS', icon: Code2, color: 'text-blue-400' },
+                        { label: 'Инфраструктура', val: 'K8s / Docker / CI', icon: Server, color: 'text-purple-400' },
+                        { label: 'Базы данных', val: 'PostgreSQL / Redis', icon: Database, color: 'text-orange-400' },
+                        { label: 'Фронтенд', val: 'React / Next.js / Vue', icon: Globe, color: 'text-emerald-400' }
                       ].map((s, i) => (
                         <div key={i} className="flex gap-4 items-start">
                           <div className={cn("p-2 bg-white/5 rounded-lg shrink-0", s.color)}><s.icon size={16} /></div>
@@ -558,8 +560,8 @@ export default function App() {
                       ))}
                     </div>
                     <div className="mt-8 pt-8 border-t border-white/10 flex justify-between items-center text-[10px] font-mono text-slate-500">
-                      <span>VERIFIED ENGINEER</span>
-                      <span>v2.0.25</span>
+                      <span>ЛИЦЕНЗИРОВАН</span>
+                      <span>v2.1.25</span>
                     </div>
                   </div>
                 </div>
@@ -574,17 +576,23 @@ export default function App() {
                   >
                     Профессиональный опыт
                   </SectionHeading>
-                  <div className="flex gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto pb-2 md:pb-1">
-                    {['All', 'Backend', 'Web', 'Infra'].map(f => (
+                  <div className="flex gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto pb-2 md:pb-1 scrollbar-hide">
+                    {[
+                      { id: 'All', label: 'Все' },
+                      { id: 'Backend', label: 'Бэкенд' },
+                      { id: 'Web', label: 'Веб' },
+                      { id: 'Infra', label: 'Инфра' }
+                    ].map(f => (
                       <button 
-                        key={f}
-                        onClick={() => setProjectFilter(f as any)}
+                        key={f.id}
+                        onClick={() => setProjectFilter(f.id as any)}
+                        aria-label={`Фильтровать по ${f.label}`}
                         className={cn(
                           "px-4 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap",
-                          projectFilter === f ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                          projectFilter === f.id ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
                         )}
                       >
-                        {f}
+                        {f.label}
                       </button>
                     ))}
                   </div>
@@ -788,11 +796,11 @@ export default function App() {
                     <div className="absolute -top-4 -left-4 flex flex-col gap-2">
                       <div className="bg-rose-500 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
                         <Tag size={12} />
-                        <span>Sale -40%</span>
+                        <span>Акция -40%</span>
                       </div>
                       <div className="bg-slate-900 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
                          <Shield size={12} className="text-emerald-500" />
-                         <span>Certified KP</span>
+                         <span>Бизнес КП</span>
                       </div>
                     </div>
                     <div className="space-y-6">
@@ -897,8 +905,8 @@ export default function App() {
 
                   return (
                     <div key={tier.id} className={cn("sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden", tier.recommended && "ring-2 ring-slate-900 shadow-2xl")}>
-                      {tier.recommended && <div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Top Pick</div>}
-                      <div className="absolute -left-8 top-4 -rotate-45 bg-rose-500 text-white text-[8px] font-bold px-8 py-1 uppercase tracking-tighter shadow-lg">Sale -40%</div>
+                      {tier.recommended && <div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Рекомендуем</div>}
+                      <div className="absolute -left-8 top-4 -rotate-45 bg-rose-500 text-white text-[8px] font-bold px-8 py-1 uppercase tracking-tighter shadow-lg">Скидка -40%</div>
                       
                       <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{tier.name}</h4>
                       <div className="flex flex-col mb-6">
@@ -906,7 +914,7 @@ export default function App() {
                         <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-mono tracking-tighter leading-none whitespace-nowrap">от {discountedPrice} ₽</div>
                       </div>
                       
-                      <p className="text-sm text-slate-500 mb-8 font-medium h-12 overflow-hidden line-clamp-2 leading-relaxed">{tier.description}</p>
+                      <p className="text-sm text-slate-500 mb-8 font-medium min-h-[3rem] leading-relaxed text-balance">{tier.description}</p>
                       <div className="space-y-4 mb-8 flex-1 w-full">
                         {tier.features.map((f, i) => (
                           <div key={i} className="flex items-start gap-3 text-sm font-bold text-slate-700">
@@ -919,11 +927,11 @@ export default function App() {
                       <div className="w-full bg-slate-50 p-4 rounded-xl mb-8 space-y-2 border border-slate-100">
                          <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
                             <ShieldCheck size={12} />
-                            <span>Security+ Bonus</span>
+                            <span>Безопасность+ Бонус</span>
                          </div>
                          <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
                             <TrendingUp size={12} />
-                            <span>SEO Basic Bonus</span>
+                            <span>SEO-Оптимизация Бонус</span>
                          </div>
                       </div>
 
@@ -946,6 +954,7 @@ export default function App() {
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.5, y: 20 }}
                     onClick={scrollToTop}
+                    aria-label="Наверх"
                     className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-slate-800 transition-colors"
                   >
                     <ArrowUp size={24} />
@@ -981,9 +990,9 @@ export default function App() {
             <h5 className="font-bold uppercase text-[10px] tracking-widest text-slate-500 mb-8">Контакты</h5>
             <div className="space-y-4 font-bold text-sm">
               <p>TG: <a href="https://t.me/SebievTL" className="hover:text-emerald-500">@SebievTL</a></p>
-              <p>Phone: <a href="tel:89259409404" className="hover:text-emerald-500">8 925 940-94-04</a></p>
-              <p>Email: <a href="mailto:Ahmed1155@mail.ru" className="hover:text-emerald-500">Ahmed1155@mail.ru</a></p>
-              <p className="text-slate-500 font-medium">Available: Mon - Fri, 10:00 - 20:00 MSK</p>
+              <p>Телефон: <a href="tel:89259409404" className="hover:text-emerald-500">8 925 940-94-04</a></p>
+              <p>Почта: <a href="mailto:Ahmed1155@mail.ru" className="hover:text-emerald-500">Ahmed1155@mail.ru</a></p>
+              <p className="text-slate-500 font-medium">Доступен: Пн - Пт, 10:00 - 20:00 МСК</p>
             </div>
           </div>
         </div>
@@ -1049,6 +1058,15 @@ export default function App() {
                       onSubmit={handleApply} 
                       className="space-y-6 pt-2 pb-10"
                     >
+                      {formError && (
+                        <motion.div 
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="p-3 bg-rose-50 text-rose-600 text-xs font-bold rounded-xl border border-rose-100"
+                        >
+                          {formError}
+                        </motion.div>
+                      )}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
                         <div className="space-y-1 group relative">
                           <input 

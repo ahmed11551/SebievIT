@@ -1,22 +1,30 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // 0. Global Safety Net
     match /{document=**} {
       allow read, write: if false;
     }
 
+    // Phase 3: Primitives
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+
     function isValidLead(data) {
-      return data.keys().hasAll(['name', 'contact', 'phone', 'message', 'createdAt'])
+      return data.keys().hasAll(['name', 'contact', 'phone', 'message', 'createdAt', 'status'])
+        && data.keys().size() >= 6 && data.keys().size() <= 10
         && data.name is string && data.name.size() > 0 && data.name.size() < 100
         && data.contact is string && data.contact.size() > 0 && data.contact.size() < 100
-        && data.phone is string && data.phone.size() >= 10 && data.phone.size() < 20
-        && data.message is string && data.message.size() < 2000
+        && data.phone is string && data.phone.size() >= 10 && data.phone.size() < 30
+        && data.status == 'new'
+        && data.message is string && data.message.size() < 3000
         && data.createdAt == request.time;
     }
 
     match /leads/{leadId} {
-      allow create: if isValidLead(request.resource.data);
-      allow read: if false; // Only admin can read (via console or future admin panel)
+      allow create: if isValidId(leadId) && isValidLead(incoming());
+      allow read, update, delete: if false; 
     }
   }
 }
