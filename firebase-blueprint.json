@@ -1,0 +1,24 @@
+{
+  "entities": {
+    "leads": {
+      "title": "Lead",
+      "description": "Information from prospective clients",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Client name" },
+        "contact": { "type": "string", "description": "Email or Telegram" },
+        "message": { "type": "string", "description": "Project details" },
+        "tier": { "type": "string", "description": "Selected pricing tier" },
+        "status": { "type": "string", "enum": ["new", "contacted", "closed"], "description": "Lead status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp" }
+      },
+      "required": ["name", "contact", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "leads/{leadId}": {
+      "schema": "leads",
+      "description": "Collection of incoming leads"
+    }
+  }
+}
