@@ -7,8 +7,10 @@
       "properties": {
         "name": { "type": "string", "description": "Client name" },
         "contact": { "type": "string", "description": "Email or Telegram" },
+        "phone": { "type": "string", "description": "Phone number" },
         "message": { "type": "string", "description": "Project details" },
-        "tier": { "type": "string", "description": "Selected pricing tier" },
+        "tier": { "type": "string", "description": "Selected pricing tier or calculator total" },
+        "calculatorData": { "type": "object", "description": "Details from the pricing calculator" },
         "status": { "type": "string", "enum": ["new", "contacted", "closed"], "description": "Lead status" },
         "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp" }
       },

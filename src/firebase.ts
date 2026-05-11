@@ -36,7 +36,7 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
   throw new Error(JSON.stringify(errInfo));
 }
 
-export async function submitLead(data: { name: string; contact: string; message: string; tier?: string }) {
+export async function submitLead(data: { name: string; contact: string; phone: string; message: string; tier?: string; calculatorData?: any }) {
   const path = 'leads';
   try {
     const docRef = await addDoc(collection(db, path), {

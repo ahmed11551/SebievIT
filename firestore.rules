@@ -6,9 +6,10 @@ service cloud.firestore {
     }
 
     function isValidLead(data) {
-      return data.keys().hasAll(['name', 'contact', 'message', 'createdAt'])
+      return data.keys().hasAll(['name', 'contact', 'phone', 'message', 'createdAt'])
         && data.name is string && data.name.size() > 0 && data.name.size() < 100
         && data.contact is string && data.contact.size() > 0 && data.contact.size() < 100
+        && data.phone is string && data.phone.size() >= 10 && data.phone.size() < 20
         && data.message is string && data.message.size() < 2000
         && data.createdAt == request.time;
     }
