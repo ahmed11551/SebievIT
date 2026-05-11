@@ -416,9 +416,9 @@ export default function App() {
                 Ахмед <span className="font-normal text-slate-500">Себиев</span>
               </h1>
               <div className="flex gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-widest leading-none">
-                <span>Ведущий инженер</span>
+                <span>Ведущий разработчик</span>
                 <span className="text-slate-200">•</span>
-                <span>2025</span>
+                <span>2026</span>
               </div>
             </div>
           </div>
@@ -1229,7 +1229,7 @@ export default function App() {
               <div className="mt-12 pt-12 border-t border-slate-100">
                 <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                   <span>Ahmed Sebiev</span>
-                  <span>Moscow / 2025</span>
+                  <span>Moscow / 2026</span>
                 </div>
               </div>
             </motion.div>
