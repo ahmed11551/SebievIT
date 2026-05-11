@@ -29,7 +29,9 @@ import {
   Star,
   Quote,
   Download,
-  PartyPopper
+  PartyPopper,
+  Tag,
+  Percent
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { submitLead } from './firebase';
@@ -197,8 +199,18 @@ const ADDONS = [
 
 // --- COMPONENTS ---
 
-const SectionHeading = ({ children, subtitle }: { children: React.ReactNode, subtitle?: string }) => (
-  <div className="mb-12">
+const SectionHeading = ({ children, subtitle, hasDiscount }: { children: React.ReactNode, subtitle?: string, hasDiscount?: boolean }) => (
+  <div className="mb-12 relative flex flex-col items-start">
+    {hasDiscount && (
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        className="flex items-center gap-2 px-3 py-1 bg-rose-500 text-white rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 shadow-lg shadow-rose-500/20"
+      >
+        <Percent size={10} />
+        <span>Скидка 40% на все услуги</span>
+      </motion.div>
+    )}
     <motion.h2 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
@@ -236,6 +248,16 @@ export default function App() {
 
   const calculateTotal = () => {
     let total = 120000; // Base price
+    total += selectedCMS?.price || 0;
+    total += selectedType?.price || 0;
+    selectedFeaturesList.forEach(f => {
+      total += f.price;
+    });
+    return Math.round(total * 0.6); // 40% Discount
+  };
+
+  const getOriginalTotal = () => {
+    let total = 120000;
     total += selectedCMS?.price || 0;
     total += selectedType?.price || 0;
     selectedFeaturesList.forEach(f => {
@@ -541,7 +563,10 @@ export default function App() {
               {/* EXPERIENCE & PROJECTS */}
               <section>
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
-                  <SectionHeading subtitle="Мой опыт в ГК Т1 и Ланит — работа с масштабами страны.">
+                  <SectionHeading 
+                    subtitle="Мой опыт в ГК Т1 и Ланит — работа с масштабами страны."
+                    hasDiscount
+                  >
                     Профессиональный опыт
                   </SectionHeading>
                   <div className="flex gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto pb-2 md:pb-1">
@@ -664,6 +689,14 @@ export default function App() {
               className="space-y-24"
             >
               <div className="text-center max-w-3xl mx-auto space-y-6">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  className="inline-flex items-center gap-2 bg-rose-500 text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest shadow-xl shadow-rose-500/20"
+                >
+                  <Tag size={14} />
+                  <span>Весенняя акция: -40% на всё</span>
+                </motion.div>
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Сервисы & Тарифы 2025</h2>
                 <p className="text-slate-500 text-sm sm:text-lg font-medium">
                   Прозрачное ценообразование на основе рыночных показателей Москвы. 
@@ -747,7 +780,10 @@ export default function App() {
                   </div>
 
                   <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-between h-fit shadow-2xl relative">
-                    <div className="absolute -top-4 -left-4 bg-emerald-500 text-slate-900 text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg">Детализация</div>
+                    <div className="absolute -top-4 -left-4 bg-rose-500 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
+                       <Tag size={12} />
+                       <span>Sale -40%</span>
+                    </div>
                     <div className="space-y-6">
                        <div className="space-y-4">
                           <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
@@ -757,33 +793,56 @@ export default function App() {
                           <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
                              <div className="flex justify-between text-sm font-bold">
                                 <span>Базовая разработка</span>
-                                <span>120 000 ₽</span>
+                                <div className="text-right">
+                                  <span className="line-through text-slate-300 mr-2 text-[10px]">120 000 ₽</span>
+                                  <span>72 000 ₽</span>
+                                </div>
                              </div>
                              {selectedCMS && selectedCMS.id !== 'none' && (
                                <div className="flex justify-between text-sm font-medium text-slate-500">
                                   <span>{selectedCMS.label}</span>
-                                  <span>+{selectedCMS.price.toLocaleString()} ₽</span>
+                                  <div className="text-right">
+                                    <span className="line-through text-slate-300 mr-2 text-[10px]">+{selectedCMS.price.toLocaleString()} ₽</span>
+                                    <span>+{(selectedCMS.price * 0.6).toLocaleString()} ₽</span>
+                                  </div>
                                </div>
                              )}
                              {selectedType && selectedType.id !== 'none' && (
                                <div className="flex justify-between text-sm font-medium text-slate-500">
                                   <span>{selectedType.label}</span>
-                                  <span>{selectedType.price.toLocaleString()} ₽</span>
+                                  <div className="text-right">
+                                    <span className="line-through text-slate-300 mr-2 text-[10px]">{selectedType.price.toLocaleString()} ₽</span>
+                                    <span>{(selectedType.price * 0.6).toLocaleString()} ₽</span>
+                                  </div>
                                </div>
                              )}
                              {selectedFeaturesList.map(f => (
                                <div key={f.id} className="flex justify-between text-sm font-medium text-slate-500">
                                   <span>{f.label}</span>
-                                  <span>+{f.price.toLocaleString()} ₽</span>
+                                  <div className="text-right">
+                                    <span className="line-through text-slate-300 mr-2 text-[10px]">+{f.price.toLocaleString()} ₽</span>
+                                    <span>+{(f.price * 0.6).toLocaleString()} ₽</span>
+                                  </div>
                                </div>
                              ))}
                           </div>
                        </div>
                        
                        <div className="pt-6 border-t-2 border-dashed border-slate-100 space-y-4">
-                         <div className="text-xs font-bold text-slate-400 uppercase">Итоговая оценка</div>
-                         <div className="text-4xl sm:text-5xl font-bold tracking-tighter text-slate-900">
-                           {calculateTotal().toLocaleString()} <span className="text-xl font-normal text-slate-400">₽</span>
+                         <div className="flex justify-between items-end">
+                            <div className="text-xs font-bold text-slate-400 uppercase">Итоговая оценка</div>
+                            <div className="text-xs font-bold text-rose-500 uppercase flex items-center gap-1">
+                               <Percent size={10} />
+                               Экономия 40%
+                            </div>
+                         </div>
+                         <div className="flex items-baseline gap-3">
+                           <div className="text-4xl sm:text-5xl font-bold tracking-tighter text-slate-900 leading-none">
+                             {calculateTotal().toLocaleString()} <span className="text-xl font-normal text-slate-400">₽</span>
+                           </div>
+                           <div className="text-lg font-bold text-slate-300 line-through">
+                             {getOriginalTotal().toLocaleString()} ₽
+                           </div>
                          </div>
                        </div>
 
@@ -809,28 +868,40 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {PRICING_TIERS.map((tier) => (
-                  <div key={tier.id} className={cn("sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden", tier.recommended && "ring-2 ring-slate-900 shadow-2xl")}>
-                    {tier.recommended && <div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Top Pick</div>}
-                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{tier.name}</h4>
-                    <div className="text-3xl sm:text-4xl font-bold mb-6 break-words w-full">{tier.price}</div>
-                    <p className="text-sm text-slate-500 mb-8 font-medium">{tier.description}</p>
-                    <div className="space-y-4 mb-12 flex-1 w-full">
-                      {tier.features.map((f, i) => (
-                        <div key={i} className="flex items-start gap-3 text-sm font-bold text-slate-700">
-                          <CheckCircle2 size={18} className="text-emerald-500 shrink-0 mt-0.5" />
-                          <span>{f}</span>
-                        </div>
-                      ))}
+                {PRICING_TIERS.map((tier) => {
+                  const originalPriceValue = parseInt(tier.price.replace(/[^\d]/g, ''));
+                  const discountedPrice = Math.round(originalPriceValue * 0.6).toLocaleString();
+                  const originalPrice = originalPriceValue.toLocaleString();
+
+                  return (
+                    <div key={tier.id} className={cn("sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden", tier.recommended && "ring-2 ring-slate-900 shadow-2xl")}>
+                      {tier.recommended && <div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Top Pick</div>}
+                      <div className="absolute -left-8 top-4 -rotate-45 bg-rose-500 text-white text-[8px] font-bold px-8 py-1 uppercase tracking-tighter shadow-lg">Sale -40%</div>
+                      
+                      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{tier.name}</h4>
+                      <div className="flex flex-col mb-6">
+                        <div className="text-sm font-bold text-slate-300 line-through">от {originalPrice} ₽</div>
+                        <div className="text-3xl sm:text-4xl font-bold text-slate-900">от {discountedPrice} ₽</div>
+                      </div>
+                      
+                      <p className="text-sm text-slate-500 mb-8 font-medium">{tier.description}</p>
+                      <div className="space-y-4 mb-12 flex-1 w-full">
+                        {tier.features.map((f, i) => (
+                          <div key={i} className="flex items-start gap-3 text-sm font-bold text-slate-700">
+                            <CheckCircle2 size={18} className="text-emerald-500 shrink-0 mt-0.5" />
+                            <span>{f}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <button 
+                        onClick={() => {setFormState({...formState, tier: tier.name}); setIsContactOpen(true);}}
+                        className={cn("w-full py-4 rounded-xl font-bold transition-all", tier.recommended ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600")}
+                      >
+                        Заказать со скидкой
+                      </button>
                     </div>
-                    <button 
-                      onClick={() => {setFormState({...formState, tier: tier.name}); setIsContactOpen(true);}}
-                      className={cn("w-full py-4 rounded-xl font-bold transition-all", tier.recommended ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600")}
-                    >
-                      Заказать
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* RETURN TO TOP BUTTON */}

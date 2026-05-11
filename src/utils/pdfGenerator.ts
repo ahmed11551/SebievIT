@@ -49,7 +49,8 @@ export const generateCP = (data: {
       [selectedType.label.replace(/[^a-zA-Z0-9\s\(\)\/]/g, '') || 'New Project', selectedType.price !== 0 ? `${selectedType.price.toLocaleString()} RUB` : '0 RUB'],
       ...selectedFeatures.map((f: any) => [f.label.replace(/[^a-zA-Z0-9\s\(\)\/]/g, '') || 'Feature', `+${f.price.toLocaleString()} RUB`]),
       ['Performance & Security Audit', 'FREE'],
-      ['3 Months After-Care Support', 'FREE']
+      ['3 Months After-Care Support', 'FREE'],
+      ['PROMOTIONAL DISCOUNT (Spring Sale)', '-40%']
     ];
 
     autoTable(doc, {
