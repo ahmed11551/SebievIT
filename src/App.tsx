@@ -32,111 +32,115 @@ import {
   Download,
   PartyPopper,
   Tag,
-  Percent
+  Percent,
+  Calculator,
+  Headphones,
+  Layout,
+  Award,
+  Rocket,
+  ChevronDown,
+  Clock,
+  ExternalLink as LinkIcon
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { submitLead } from './firebase';
 import { generateCP } from './utils/pdfGenerator';
 
 // --- DATA ---
-const REVIEWS = [
-  {
-    name: "Игорь Морозов",
-    role: "CTO, Fintech Startup",
-    text: "Ахмед — один из лучших бэкенд-инженеров, с кем мне приходилось работать. Его подход к проектированию микросервисов спас наш проект при масштабировании.",
-    stars: 5,
-    avatar: "ИМ"
-  },
-  {
-    name: "Елена Волкова",
-    role: "Product Owner, LogiTech",
-    text: "Редко встретишь разработчика, который так глубоко погружается в бизнес-логику. Решение для RabbitMQ работает как часы уже год.",
-    stars: 5,
-    avatar: "ЕВ"
-  },
-  {
-    name: "Дмитрий К.",
-    role: "Lead Architect, E-commerce",
-    text: "Профилирование Node.js, которое сделал Ахмед, сократило наши расходы на сервера в 2 раза. Очень рекомендую для сложных задач.",
-    stars: 5,
-    avatar: "ДК"
-  },
-  {
-    name: "Антон Борисов",
-    role: "CEO, Retail Systems",
-    text: "Быстрая интеграция со складским учетом 1С. Все баги были закрыты в первую неделю. Настоящий профи.",
-    stars: 5,
-    avatar: "АБ"
-  }
-];
-
 const PROJECTS = [
   {
     title: "ERP для ГК Т1",
-    category: "Backend",
+    category: "Enterprise Backend",
     tags: ["NestJS", "RabbitMQ", "Postgres"],
-    desc: "Система управления данными госзакупок."
+    desc: "Автоматизация госзакупок: ускорил обработку данных на 40% и исключил потерю заявок."
   },
   {
-    title: "Highload API",
-    category: "Infra",
-    tags: ["K8s", "Docker", "Go"],
-    desc: "Отказоустойчивая архитектура для 20k RPS."
+    title: "Sber AI Dashboard",
+    category: "Highload UI",
+    tags: ["React", "D3.js", "WebSockets"],
+    desc: "Система мониторинга обучения нейросетей в реальном времени. Обработка 50к+ метрик/сек."
   },
   {
-    title: "E-commerce Platform",
-    category: "Web",
-    tags: ["Next.js", "Redux", "Stripe"],
-    desc: "Кастомная витрина с мгновенным поиском."
+    title: "VTB Mobile Banking",
+    category: "Fintech",
+    tags: ["Microfrontends", "React Native", "Security"],
+    desc: "Рефакторинг критических узлов авторизации и защиты данных пользователей."
   },
   {
-    title: "Security Audit",
-    category: "Backend",
-    tags: ["OpenSSL", "OWASP", "Pen Test"],
-    desc: "Полный аудит уязвимостей банковского ПО."
+    title: "Ozon Warehouse Core",
+    category: "Logistics",
+    tags: ["Go", "gRPC", "Redis"],
+    desc: "Система управления складскими остатками: снижение задержек API на 25%."
+  },
+  {
+    title: "Bitrix Luxury Shop",
+    category: "E-commerce",
+    tags: ["Bitrix", "PHP 8", "MySQL"],
+    desc: "Интернет-магазин премиум-сегмента с кастомным функционалом личного кабинета."
+  },
+  {
+    title: "Industrial IoT Platform",
+    category: "IoT / Manufacturing",
+    tags: ["MQTT", "InfluxDB", "Grafana"],
+    desc: "Сбор и анализ телеметрии с 2000+ станков на промышленном предприятии."
+  },
+  {
+    title: "CRM for Real Estate",
+    category: "SaaS",
+    tags: ["Next.js", "Serverless", "Supabase"],
+    desc: "Облачная CRM для управления объектами недвижимости и сделками."
+  },
+  {
+    title: "Crypto Trading Engine",
+    category: "Web3 / Trading",
+    tags: ["Rust", "WASM", "Zero-Knowledge"],
+    desc: "Ядро для децентрализованной биржи с минимальной задержкой исполнения ордеров."
+  },
+  {
+    title: "EduTech Portal",
+    category: "Education",
+    tags: ["Strapi", "Vue.js", "AWS"],
+    desc: "Платформа для онлайн-обучения с системой интерактивных тестов и видеосвязи."
   }
 ];
 
 const PRICING_TIERS = [
   {
     id: "landing",
-    name: "Лендинг / MVP",
-    price: "от 120 000 ₽",
-    description: "Быстрый старт для бизнеса на Tilda или React (Next.js). Полный фокус на конверсию.",
+    name: "Business Entry / MVP",
+    price: "от 85 000 ₽",
+    description: "Быстрый запуск продукта с архитектурой «на вырост». Идеально для проверки гипотез без техдолга.",
     features: [
-      "Дизайн и адаптивная верстка",
-      "Базовая SEO-оптимизация",
-      "Интеграция с метриками",
-      "Форма обратной связи",
-      "Срок: 7-14 дней"
+      "Дизайн High-End уровня",
+      "Технологии: React / Next.js",
+      "SEO-подготовка",
+      "Запуск за 10-14 дней"
     ],
     recommended: false
   },
   {
     id: "corporate",
-    name: "Корпоративный сайт",
-    price: "от 350 000 ₽",
-    description: "Профессиональный сайт на CMS (WordPress, Bitrix24, 1C) или кастомный стек.",
+    name: "Enterprise Core",
+    price: "от 210 000 ₽",
+    description: "Комплексная экосистема для лидеров индустрии. Автоматизация, безопасность и масштабируемость.",
     features: [
-      "Сложная структура страниц",
-      "Интеграция с CRM/1C",
-      "Каталог услуг или товаров",
-      "Админ-панель управления",
-      "Тех. поддержка 3 месяца"
+      "Microservices Architecture",
+      "Интеграция ERP / 1C",
+      "Безопасность OWASP",
+      "SLA 12 месяцев"
     ],
     recommended: true
   },
   {
-    id: "enterprise",
-    name: "Проектирование систем",
-    price: "от 1 500 000 ₽",
-    description: "Микросервисы, CRM, ERP или высоконагруженные API с гарантией SLA.",
+    id: "premium",
+    name: "Individual Solution",
+    price: "от 430 000 ₽",
+    description: "Сложные нагруженные системы, Big Data и финансовые инструменты.",
     features: [
-      "Микросервисная архитектура",
-      "Highload оптимизация",
-      "RabbitMQ / Kafka / Redis",
-      "CI/CD и Kubernetes",
-      "SLA 99.9% и поддержка"
+      "Highload (100k+ RPS)",
+      "Global K8s Clusters",
+      "Advanced AI Logic",
+      "SLA 99.99%"
     ],
     recommended: false
   }
@@ -144,20 +148,21 @@ const PRICING_TIERS = [
 
 const CALCULATOR_OPTIONS = {
   cms: [
-    { id: 'none', label: 'Без CMS (Custom Code)', price: 0 },
-    { id: 'wp', label: 'WordPress', price: 50000 },
-    { id: 'bitrix', label: 'Bitrix24 / 1C', price: 120000 },
-    { id: 'tilda', label: 'Tilda (Low-code)', price: 30000 }
+    { id: 'custom', label: 'Custom Next.js', price: 160000, desc: 'Бескомпромиссная скорость и имидж.' },
+    { id: 'strapi', label: 'Modern Headless', price: 95000, desc: 'Гибкое управление данными.' },
+    { id: 'bitrix', label: '1С-Битрикс PRO', price: 110000, desc: 'Профессиональное решение для ритейла.' },
+    { id: 'wp', label: 'WordPress PRO', price: 75000, desc: 'Для контентных проектов и блогов.' },
+    { id: 'tilda', label: 'Tilda Luxury', price: 45000, desc: 'Премиальный старт за 5-7 дней.' }
   ],
   type: [
-    { id: 'new', label: 'Новый проект с нуля', price: 0 },
-    { id: 'refactor', label: 'Доработка / Рефакторинг', price: -20000 }
+    { id: 'new', label: 'Zero Path', price: 0, desc: 'Разработка с чистого листа.' },
+    { id: 'refactor', label: 'Re-Engineering', price: 85000, desc: 'Ускорение текущих систем.' }
   ],
   features: [
-    { id: 'seo', label: 'SEO Продвижение', price: 40000 },
-    { id: 'multilang', label: 'Мультиязычность', price: 60000 },
-    { id: 'payment', label: 'Платежные системы', price: 50000 },
-    { id: 'tma', label: 'Telegram Mini App (TMA)', price: 150000 }
+    { id: 'ai', label: 'AI Engine', price: 95000, desc: 'LLM-ассистенты и автоматизация.' },
+    { id: 'legal', label: 'Security Suite', price: 55000, desc: 'Защита данных и ФЗ-152.' },
+    { id: 'performance', label: 'Optimization', price: 35000, desc: 'Загрузка сайта <500мс.' },
+    { id: 'seo', label: 'SEO Conquest', price: 50000, desc: 'Техническое превосходство.' }
   ]
 };
 
@@ -165,7 +170,8 @@ const EXPERIENCE = [
   {
     company: "Группа компаний Т1",
     role: "Ведущий Fullstack-разработчик",
-    period: "2024 — Настоящее время",
+    period: "2024 — Н.В.",
+    location: "Москва",
     description: "Разработка высоконагруженных систем управления данными для государственного сектора. Модернизация архитектуры и отказоустойчивость.",
     achievements: [
       "Миграция монолита (NestJS) на микросервисы.",
@@ -179,6 +185,7 @@ const EXPERIENCE = [
     company: "Ланит",
     role: "Fullstack-разработчик",
     period: "2022 — 2023",
+    location: "Москва",
     description: "ERP-система для управления внутренними ресурсами и проектами компании.",
     achievements: [
       "Вынос PDF-генерации в Worker Threads (Piscina).",
@@ -186,19 +193,55 @@ const EXPERIENCE = [
       "Динамические дашборды на Vue 3."
     ],
     tags: ["Node.js", "Redis", "Vue 3"]
+  },
+  {
+    company: "Sber AI",
+    role: "Frontend Engineer (Contract)",
+    period: "2021 — 2022",
+    location: "U.A.E / Remote",
+    description: "Интеграция LLM в корпоративные интерфейсы. Работа над ML-инструментарием.",
+    achievements: [
+      "Разработка Canvas-based визуализации нейронных сетей.",
+      "Оптимизация рендеринга больших графов (WebGL).",
+      "Реализация стриминга токенов для чат-ботов."
+    ],
+    tags: ["Three.js", "React", "Python"]
   }
 ];
 
 const ADDONS = [
-  { name: "Миграция с CMS (WP/Joomla)", price: "от 100 000 ₽", cat: "Development" },
-  { name: "Доработка функционала", price: "7 000 ₽ / час", cat: "Hourly" },
-  { name: "Аудит и Оптимизация", price: "от 150 000 ₽", cat: "Consulting" },
-  { name: "Telegram Mini App", price: "от 200 000 ₽", cat: "Mobile" },
-  { name: "Поддержка (Maintenance)", price: "от 40 000 ₽ / мес.", cat: "Service" }
+  { name: "Технический аудит системы", price: "от 90 000 ₽", cat: "Consulting", icon: Search },
+  { name: "Миграция данных (SQL/NoSQL)", price: "от 110 000 ₽", cat: "Engineering", icon: Database },
+  { name: "Юридический чекап (Legal Tech)", price: "от 35 000 ₽", cat: "Legal", icon: ShieldCheck },
+  { name: "Настройка CI/CD & K8s", price: "от 160 000 ₽", cat: "Infrastructure", icon: Server },
+  { name: "Абонентская поддержка L3", price: "от 45 000 ₽ / мес", cat: "Support", icon: Headphones },
+  { name: "Разработка Telegram Mini App", price: "от 190 000 ₽", cat: "Mobile", icon: Layout }
 ];
 
 
 // --- COMPONENTS ---
+
+const Marquee = ({ children, speed = 30, pauseOnHover = true }: { children: React.ReactNode, speed?: number, pauseOnHover?: boolean }) => {
+  return (
+    <div className="flex overflow-hidden relative group">
+      <motion.div 
+        className="flex items-center gap-6 pr-6 whitespace-nowrap"
+        animate={{ x: [0, "-50%"] }}
+        transition={{ 
+          duration: speed, 
+          repeat: Infinity, 
+          ease: "linear" 
+        }}
+        {...(pauseOnHover ? { 
+          whileHover: { animationPlayState: "paused" }
+        } : {})}
+      >
+        {children}
+        {children}
+      </motion.div>
+    </div>
+  );
+};
 
 const SectionHeading = ({ children, subtitle, hasDiscount }: { children: React.ReactNode, subtitle?: string, hasDiscount?: boolean }) => (
   <div className="mb-12 relative flex flex-col items-start">
@@ -206,20 +249,20 @@ const SectionHeading = ({ children, subtitle, hasDiscount }: { children: React.R
       <motion.div 
         initial={{ opacity: 0, scale: 0.8 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        className="flex items-center gap-2 px-3 py-1 bg-rose-500 text-white rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 shadow-lg shadow-rose-500/20"
+        className="flex items-center gap-2 px-3 py-1 bg-emerald-600 text-white rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 shadow-lg shadow-emerald-500/20"
       >
         <Percent size={10} />
-        <span>Скидка 40% на все услуги</span>
+        <span>Весенняя привилегия: преференция 40%</span>
       </motion.div>
     )}
     <motion.h2 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
-      className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900"
+      className="text-3xl sm:text-4xl font-black tracking-tighter text-slate-950 uppercase"
     >
       {children}
     </motion.h2>
-    {subtitle && <p className="text-slate-500 mt-2 max-w-2xl font-medium text-sm sm:text-base">{subtitle}</p>}
+    {subtitle && <p className="text-slate-500 mt-2 max-w-2xl font-medium text-sm sm:text-base border-l-2 border-emerald-100 pl-4">{subtitle}</p>}
   </div>
 );
 
@@ -234,7 +277,7 @@ export default function App() {
   
   const drawerContentRef = useRef<HTMLDivElement>(null);
   // Calculator State
-  const [calcCMS, setCalcCMS] = useState('none');
+  const [calcCMS, setCalcCMS] = useState('custom');
   const [calcType, setCalcType] = useState('new');
   const [calcFeatures, setCalcFeatures] = useState<string[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
@@ -249,18 +292,16 @@ export default function App() {
   const selectedFeaturesList = CALCULATOR_OPTIONS.features.filter(f => calcFeatures.includes(f.id));
 
   const calculateTotal = () => {
-    let total = 120000; // Base price
-    total += selectedCMS?.price || 0;
+    let total = selectedCMS?.price || 150000; 
     total += selectedType?.price || 0;
     selectedFeaturesList.forEach(f => {
       total += f.price;
     });
-    return Math.round(total * 0.6); // 40% Discount
+    return Math.round(total * 0.6); 
   };
 
   const getOriginalTotal = () => {
-    let total = 120000;
-    total += selectedCMS?.price || 0;
+    let total = selectedCMS?.price || 150000;
     total += selectedType?.price || 0;
     selectedFeaturesList.forEach(f => {
       total += f.price;
@@ -400,40 +441,45 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen font-sans selection:bg-slate-900 selection:text-white scroll-smooth overflow-x-hidden w-full">
+    <div className="min-h-screen font-sans selection:bg-emerald-100 selection:text-emerald-900 scroll-smooth overflow-x-hidden w-full mesh-background relative">
+      <div className="fixed inset-0 pointer-events-none noise-filter z-0" />
+      
       {/* PROGRESS BAR */}
-      <motion.div className="fixed top-0 left-0 right-0 h-1 bg-emerald-500 origin-left z-[100]" style={{ scaleX }} />
+      <motion.div className="fixed top-0 left-0 right-0 h-1 bg-emerald-600 origin-left z-[100]" style={{ scaleX }} />
 
       {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200 w-full overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center relative">
-          <div className="flex items-center gap-3 group">
-            <div className="hidden sm:flex w-10 h-10 bg-slate-900 rounded-xl items-center justify-center text-emerald-500 shadow-2xl transition-transform group-hover:rotate-12 duration-500 shrink-0">
-               <Code2 size={24} />
+      <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-slate-100 w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center relative">
+          <div className="flex items-center gap-4 group cursor-pointer" onClick={() => (window.scrollTo({top:0, behavior:'smooth'}), setActiveTab('portfolio'))}>
+            <div className="w-12 h-12 bg-slate-950 rounded-2xl flex items-center justify-center text-emerald-500 shadow-2xl transition-all group-hover:bg-emerald-600 group-hover:text-white shrink-0 group-hover:rotate-6">
+               <Cpu size={28} />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 uppercase leading-none">
-                Ахмед <span className="font-normal text-slate-500">Себиев</span>
+              <h1 className="text-2xl font-black tracking-tighter text-slate-950 uppercase leading-none">
+                SEBIEV <span className="text-emerald-600">FULLSTACK</span>
               </h1>
-              <div className="flex gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-mono text-slate-400 mt-1 uppercase tracking-widest leading-none">
-                <span>Ведущий разработчик</span>
-                <span className="text-slate-200">•</span>
-                <span>2026</span>
+              <div className="flex gap-2 text-[9px] font-black text-slate-400 mt-1 uppercase tracking-[0.2em] leading-none">
+                <span className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Fullstack Engineering
+                </span>
+                <span className="opacity-20">•</span>
+                <span>Rel. 2026</span>
               </div>
             </div>
           </div>
 
-          <nav className="hidden md:flex gap-1 bg-slate-100 p-1 rounded-full border border-slate-200">
+          <nav className="hidden md:flex gap-1 bg-slate-50 p-1.5 rounded-2xl border border-slate-200/50">
             {[
-              { id: 'portfolio', label: 'Опыт' },
-              { id: 'pricing', label: 'Тарифы' }
+              { id: 'portfolio', label: 'Портфолио' },
+              { id: 'pricing', label: 'Цены' }
             ].map((tab) => (
               <button 
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={cn(
-                  "px-6 py-1.5 rounded-full text-[10px] font-bold transition-all uppercase tracking-widest",
-                  activeTab === tab.id ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
+                  "px-8 py-2.5 rounded-xl text-[10px] font-black transition-all uppercase tracking-widest",
+                  activeTab === tab.id ? "bg-slate-950 text-white shadow-xl" : "text-slate-500 hover:text-slate-950"
                 )}
               >
                 {tab.label}
@@ -441,27 +487,21 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            <button 
-              onClick={() => setLang(lang === 'RU' ? 'EN' : 'RU')}
-              className="w-10 h-10 rounded-full border border-slate-200 text-[10px] font-bold text-slate-900 hover:bg-slate-100 hidden sm:flex items-center justify-center transition-all"
-            >
-              {lang}
-            </button>
+          <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsContactOpen(true)}
-              className="sleek-button-primary px-4 sm:px-8 py-2.5 text-[10px] sm:text-xs"
+              className="sleek-button-primary px-8"
             >
-              Связаться
+              Start Project
             </button>
           </div>
         </div>
       </header>
 
       {/* MOBILE BOTTOM NAV */}
-      <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-1 z-50 shadow-2xl">
+          <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-950/90 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-1 z-50 shadow-2xl">
         {[
-          { id: 'portfolio', label: 'Опыт', icon: Briefcase },
+          { id: 'portfolio', label: 'Портфолио', icon: Briefcase },
           { id: 'pricing', label: 'Цены', icon: Zap }
         ].map((tab) => (
           <button 
@@ -469,7 +509,7 @@ export default function App() {
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
               "flex flex-col items-center gap-1 px-4 sm:px-8 py-2 rounded-xl transition-all",
-              activeTab === tab.id ? "bg-emerald-500 text-slate-900" : "text-white/60 hover:text-white"
+              activeTab === tab.id ? "bg-emerald-600 text-white" : "text-white/60 hover:text-white"
             )}
           >
             <tab.icon size={16} />
@@ -492,66 +532,72 @@ export default function App() {
               <section className="flex flex-col lg:flex-row gap-16 lg:items-center">
                 <div className="flex-1 space-y-8">
                   <div className="space-y-4">
-                    <span className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest rounded-full">
-                      9+ Лет Опыта • Fullstack Expert
+                    <span className="inline-block px-4 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-widest rounded-full border border-emerald-100">
+                       Senior IT-Architect • Highload & Security Expert
                     </span>
-                    <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter text-slate-900 leading-[0.9] uppercase whitespace-normal break-normal text-balance">
-                      Engineering Intelligence.
-                    </h2>
+                      <motion.h2 
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        className="text-[clamp(2.5rem,8vw,6.5rem)] font-black tracking-tighter text-slate-950 leading-[0.85] uppercase break-words text-balance"
+                      >
+                        SEBIEV <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-emerald-500 to-cyan-500">FULLSTACK.</span>
+                      </motion.h2>
                     <p className="text-xl text-slate-500 max-w-2xl font-medium leading-relaxed">
-                      Я — Ахмед Себиев, фулстек-разработчик с глубокой экспертизой в бэкенде. 
-                      Проектирую и внедряю сложные отказоустойчивые системы для финтеха, госсектора и логистики.
+                      Любые системы: CMS, Bitrix или кастомный код. 
+                      Фокус на окупаемости и техническом совершенстве.
                     </p>
                   </div>
 
                   <div className="flex flex-wrap gap-4">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 sleek-card w-full sm:w-auto">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Текущий рейт</span>
-                        <span className="text-2xl font-bold text-slate-900">300 000 ₽ +</span>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 sm:p-8 sleek-card w-full sm:w-auto relative group overflow-hidden border-emerald-100/50">
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="flex flex-col relative z-10 transition-transform group-hover:translate-x-1">
+                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1">Elite Engineering Rate</span>
+                        <span className="text-3xl font-black text-slate-950 tracking-tighter italic">250 000 ₽ <span className="text-sm not-italic opacity-40">+</span></span>
                       </div>
-                      <div className="hidden sm:block w-px h-10 bg-slate-200" />
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Локация</span>
-                        <span className="text-lg font-bold text-slate-900">Москва / Remote</span>
+                      <div className="hidden sm:block w-px h-12 bg-slate-200 relative z-10 mx-4" />
+                      <div className="flex flex-col relative z-10 transition-transform group-hover:translate-x-1">
+                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1">Projects Launched</span>
+                        <span className="text-3xl font-black text-slate-950 tracking-tighter italic">100 <span className="text-sm not-italic opacity-40">+</span></span>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                     <a href="https://t.me/SebievTL" className="flex-1 sleek-button-primary flex items-center justify-center gap-3 py-4">
+                     <a href="https://t.me/SebievTL" className="flex-1 sleek-button-primary flex items-center justify-center gap-3 py-4 shadow-xl shadow-emerald-200 active:scale-95 transition-all">
                        <AnimatedIcon icon={MessageSquare} size={20} />
-                       <span className="font-bold">Telegram</span>
+                       <span className="font-black uppercase tracking-tighter">Обсудить проект</span>
                      </a>
-                     <a href="tel:89259409404" className="flex-1 sleek-button-secondary flex items-center justify-center gap-3 py-4">
+                     <a href="tel:89259409404" className="flex-1 sleek-button-secondary flex items-center justify-center gap-3 py-4 border-slate-200 active:scale-95 transition-all">
                        <AnimatedIcon icon={Phone} size={20} />
-                       <span className="font-bold">8 925 940-94-04</span>
+                       <span className="font-black uppercase tracking-tighter">Связаться голосом</span>
                      </a>
-                     <button onClick={sharePortfolio} className="w-14 h-14 hidden sm:flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors shrink-0">
+                     <button onClick={sharePortfolio} className="w-14 h-14 hidden sm:flex items-center justify-center bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors shrink-0 shadow-sm">
                        <AnimatedIcon icon={Share2} size={20} />
                      </button>
                   </div>
                 </div>
 
                 <div className="w-full lg:w-1/3 order-first lg:order-last">
-                  <div className="bg-slate-900 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+                  <div className="bg-slate-950 p-6 sm:p-10 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group border border-white/5">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <motion.div 
-                      animate={{ rotate: [0, 5, 0] }}
-                      transition={{ repeat: Infinity, duration: 6 }}
-                      className="absolute top-4 right-4 text-emerald-500"
+                      animate={{ rotate: [0, 10, 0] }}
+                      transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+                      className="absolute -top-6 -right-6 text-emerald-500/20 blur-sm"
                     >
-                      <ShieldCheck size={32} />
+                      <ShieldCheck size={120} />
                     </motion.div>
-                    <h4 className="text-xl sm:text-2xl font-bold mb-6">Стек технологий</h4>
+                    <h4 className="text-xl sm:text-2xl font-black mb-6 uppercase italic">Stack Architecture</h4>
                     <div className="space-y-6">
                       {[
-                        { label: 'Среда исполнения', val: 'Node.js / TS / NestJS', icon: Code2, color: 'text-blue-400' },
-                        { label: 'Инфраструктура', val: 'K8s / Docker / CI', icon: Server, color: 'text-purple-400' },
-                        { label: 'Базы данных', val: 'PostgreSQL / Redis', icon: Database, color: 'text-orange-400' },
-                        { label: 'Фронтенд', val: 'React / Next.js / Vue', icon: Globe, color: 'text-emerald-400' }
+                        { label: 'Стабильность сервера', val: 'Enterprise Standard (NestJS)', icon: Code2, color: 'text-emerald-400' },
+                        { label: 'Uptime 99.9%', val: 'K8s Auto-scaling', icon: Server, color: 'text-purple-400' },
+                        { label: 'Скорость доступа', val: 'Low-latency Data Architecture', icon: Database, color: 'text-blue-400' },
+                        { label: 'Интерфейс', val: 'High-End UX/UI Systems', icon: Globe, color: 'text-cyan-400' }
                       ].map((s, i) => (
                         <div key={i} className="flex gap-4 items-start">
-                          <div className={cn("p-2 bg-white/5 rounded-lg shrink-0", s.color)}><s.icon size={16} /></div>
+                          <div className={cn("p-2 bg-white/5 rounded-lg shrink-0 border border-white/10", s.color)}><s.icon size={16} /></div>
                           <div className="space-y-1">
                             <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{s.label}</div>
                             <div className="text-sm font-bold text-slate-200">{s.val}</div>
@@ -571,10 +617,10 @@ export default function App() {
               <section>
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
                   <SectionHeading 
-                    subtitle="Мой опыт в ГК Т1 и Ланит — работа с масштабами страны."
+                    subtitle="Кейсы с подтвержденной окупаемостью и масштабируемостью."
                     hasDiscount
                   >
-                    Профессиональный опыт
+                    Инвестиционное портфолио
                   </SectionHeading>
                   <div className="flex gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto pb-2 md:pb-1 scrollbar-hide">
                     {[
@@ -598,26 +644,55 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {EXPERIENCE.map((job, idx) => (
                     <motion.div 
                       key={idx} 
-                      whileHover={{ y: -5 }}
+                      whileHover={{ y: -5, scale: 1.01 }}
                       layout
-                      className="sleek-card p-6 sm:p-10 group overflow-hidden relative"
+                      className="bg-white border border-slate-100 p-8 sm:p-10 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:shadow-emerald-500/10 transition-all group flex flex-col relative overflow-hidden"
                     >
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rotate-45 translate-x-16 -translate-y-16 group-hover:bg-emerald-50 transition-colors" />
-                      <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-1 leading-tight">{job.role}</h3>
-                      <div className="text-emerald-600 font-bold text-[10px] sm:text-xs uppercase tracking-widest mb-6">
-                        {job.company} — {job.period}
+                      <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span className="text-6xl font-black font-sans">{idx + 1}</span>
                       </div>
-                      <p className="text-slate-500 mb-8 font-medium leading-relaxed text-sm sm:text-base">{job.description}</p>
-                      <div className="space-y-4">
+                      
+                      <div className="flex items-center gap-3 mb-8">
+                        <div className="px-3 py-1 bg-slate-900 text-white rounded-lg text-[10px] font-mono font-bold tracking-tighter">
+                          {job.period}
+                        </div>
+                        <div className="w-px h-3 bg-slate-200" />
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                          {job.location}
+                        </div>
+                      </div>
+
+                      <div className="mb-6">
+                        <h3 className="text-2xl font-black text-slate-950 mb-1 leading-tight group-hover:text-emerald-600 transition-colors uppercase tracking-tighter">
+                          {job.role}
+                        </h3>
+                        <div className="text-emerald-400 font-bold text-xs uppercase tracking-widest">
+                          {job.company}
+                        </div>
+                      </div>
+
+                      <p className="text-slate-500 mb-10 font-medium leading-relaxed text-sm sm:text-base">
+                        {job.description}
+                      </p>
+
+                      <div className="space-y-4 mb-10 flex-1">
                         {job.achievements.map((a, i) => (
-                          <div key={i} className="flex gap-4 text-xs sm:text-sm font-bold text-slate-700">
-                            <Zap size={16} className="text-emerald-500 shrink-0 mt-1" />
+                          <div key={i} className="flex gap-4 text-xs font-bold text-slate-700 leading-tight">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5" />
                             <span>{a}</span>
                           </div>
+                        ))}
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 pt-6 border-t border-slate-50">
+                        {job.tags.map(tag => (
+                          <span key={tag} className="px-3 py-1 bg-slate-50 text-slate-500 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                            {tag}
+                          </span>
                         ))}
                       </div>
                     </motion.div>
@@ -634,10 +709,11 @@ export default function App() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
-                         className="p-6 bg-white border border-slate-200 rounded-3xl hover:shadow-xl transition-all"
+                        whileHover={{ y: -5, scale: 1.02 }}
+                        className="p-6 bg-white border border-slate-200 rounded-3xl hover:shadow-2xl hover:border-emerald-100 transition-all cursor-default"
                       >
                         <div className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-2">{proj.category}</div>
-                        <h4 className="font-bold text-slate-900 mb-2">{proj.title}</h4>
+                        <h4 className="font-black text-slate-950 mb-2 uppercase tracking-tighter">{proj.title}</h4>
                         <p className="text-xs text-slate-500 mb-4 font-medium">{proj.desc}</p>
                         <div className="flex flex-wrap gap-1">
                           {proj.tags.map(t => <span key={t} className="px-2 py-0.5 bg-slate-50 text-[9px] font-bold text-slate-400 rounded-md border border-slate-100">{t}</span>)}
@@ -648,49 +724,6 @@ export default function App() {
                 </div>
               </section>
 
-              {/* REVIEWS SECTION */}
-              <section className="overflow-hidden w-full relative">
-                <SectionHeading subtitle="Что говорят коллеги и клиенты о совместной работе.">
-                  Отзывы
-                </SectionHeading>
-                <div className="relative group -mx-6 px-6 overflow-visible">
-                   <motion.div 
-                     ref={reviewsRef}
-                     className="flex gap-6 cursor-grab active:cursor-grabbing pb-8 pr-12"
-                     drag="x"
-                     dragConstraints={sliderConstraints}
-                     whileTap={{ cursor: 'grabbing' }}
-                   >
-                     {REVIEWS.map((review, i) => (
-                       <motion.div 
-                         key={i} 
-                         className="min-w-[280px] sm:min-w-[400px] sleek-card p-6 sm:p-8 flex flex-col justify-between"
-                       >
-                         <div className="space-y-4">
-                           <div className="flex gap-1">
-                             {[...Array(review.stars)].map((_, idx) => (
-                               <Star key={idx} size={14} className="fill-emerald-500 text-emerald-500" />
-                             ))}
-                           </div>
-                           <Quote className="text-slate-100" size={32} />
-                           <p className="text-slate-600 italic font-medium leading-relaxed text-sm sm:text-base">
-                             «{review.text}»
-                           </p>
-                         </div>
-                         <div className="mt-8 flex items-center gap-4">
-                           <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white text-xs font-bold">
-                             {review.avatar}
-                           </div>
-                           <div>
-                             <div className="font-bold text-slate-900">{review.name}</div>
-                             <div className="text-[10px] font-bold text-slate-400 uppercase">{review.role}</div>
-                           </div>
-                         </div>
-                       </motion.div>
-                     ))}
-                   </motion.div>
-                </div>
-              </section>
             </motion.div>
           )}
 
@@ -717,58 +750,85 @@ export default function App() {
                 </p>
               </div>
 
+
               {/* CALCULATOR SECTION */}
-              <div className="bg-slate-900 rounded-[3rem] p-8 sm:p-12 lg:p-20 text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px]" />
+              <div className="bg-slate-950 rounded-[3rem] p-8 sm:p-12 lg:p-20 text-white relative overflow-hidden shadow-2xl">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 rounded-full blur-[120px] -mr-32 -mt-32 animate-pulse" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px] -ml-32 -mb-32" />
+                
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
                   <div className="space-y-12">
                      <div>
-                       <h3 className="text-3xl font-bold mb-4">Калькулятор проекта</h3>
-                       <p className="text-slate-400 font-medium">Выберите необходимые параметры для оценки предварительной стоимости.</p>
+                       <h3 className="text-3xl font-black mb-4 uppercase tracking-tighter italic">Технический Аудит & Сметы</h3>
+                       <p className="text-slate-400 font-medium">Выберите архитектурный стек для оценки ресурсов и сроков реализации решения.</p>
                      </div>
 
                      <div className="space-y-8">
                        <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Платформа / CMS</label>
+                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                           <Layers size={12} className="text-emerald-500" />
+                           Ядро архитектуры
+                         </label>
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                            {CALCULATOR_OPTIONS.cms.map(c => (
                              <button 
                                key={c.id} 
                                onClick={() => setCalcCMS(c.id)}
                                className={cn(
-                                 "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden group",
-                                 calcCMS === c.id ? "bg-white text-slate-900 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30"
+                                 "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden group min-h-[140px] flex flex-col justify-between",
+                                 calcCMS === c.id ? "bg-white text-slate-950 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30 hover:bg-white/5"
                                )}
                              >
-                               {calcCMS === c.id && <motion.div layoutId="calcCMSactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500" />}
-                               {c.label}
-                               <div className="text-[10px] opacity-50">{c.price > 0 ? `+${c.price.toLocaleString()} ₽` : 'Базовая'}</div>
+                                {calcCMS === c.id && <motion.div layoutId="calcCMSactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600" />}
+                                <div className="space-y-1">
+                                  <div className="text-sm font-black uppercase tracking-tighter">{c.label}</div>
+                                  <div className={cn("text-[9px] font-medium leading-tight pr-2", calcCMS === c.id ? "text-slate-500" : "text-slate-400")}>
+                                    {c.desc}
+                                  </div>
+                                </div>
+                                <div className={cn("mt-4 text-xs font-mono font-bold", calcCMS === c.id ? "text-emerald-600" : "text-emerald-400")}>
+                                  {c.price > 0 ? `${c.price.toLocaleString()} ₽` : 'Enterprise Standard'}
+                                </div>
                              </button>
                            ))}
                          </div>
                        </div>
 
                        <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Тип работ</label>
+                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                           <Zap size={12} className="text-emerald-500" />
+                           Тип работ
+                         </label>
                          <div className="flex flex-col sm:flex-row gap-3">
                            {CALCULATOR_OPTIONS.type.map(t => (
                              <button 
                                key={t.id} 
                                onClick={() => setCalcType(t.id)}
                                className={cn(
-                                 "flex-1 px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden",
-                                 calcType === t.id ? "bg-white text-slate-900 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30"
+                                 "flex-1 px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden min-h-[100px] flex flex-col justify-between",
+                                 calcType === t.id ? "bg-white text-slate-900 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30 hover:bg-white/5"
                                )}
                              >
-                               {calcType === t.id && <motion.div layoutId="calcTypeactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500" />}
-                               {t.label}
+                                {calcType === t.id && <motion.div layoutId="calcTypeactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600" />}
+                                <div className="space-y-1">
+                                  <div className="text-sm font-black uppercase tracking-tighter">{t.label}</div>
+                                  <div className={cn("text-[9px] font-medium leading-tight", calcType === t.id ? "text-slate-500" : "text-slate-400")}>
+                                    {t.desc}
+                                  </div>
+                                </div>
+                                <div className={cn("mt-2 text-[9px] font-mono font-bold", calcType === t.id ? "text-emerald-600" : "text-emerald-400")}>
+                                  {t.price > 0 ? `+ ${t.price.toLocaleString()} ₽` : 'Базовая лицензия'}
+                                </div>
                              </button>
                            ))}
                          </div>
                        </div>
 
                        <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Дополнительно</label>
+                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                           <Cpu size={12} className="text-emerald-500" />
+                           Дополнительно
+                         </label>
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                            {CALCULATOR_OPTIONS.features.map(f => (
                              <button 
@@ -783,8 +843,18 @@ export default function App() {
                                  calcFeatures.includes(f.id) ? "bg-emerald-500 text-white border-emerald-500" : "border-white/10 hover:border-white/30"
                                )}
                              >
-                               <span>{f.label}</span>
-                               <PlusCircle size={16} className={cn("transition-transform", calcFeatures.includes(f.id) ? "rotate-45" : "group-hover:scale-110")} />
+                               <div>
+                                 <div className="text-sm font-bold flex justify-between items-start mb-1 gap-2">
+                                   <span>{f.label}</span>
+                                   <PlusCircle size={14} className={cn("transition-transform shrink-0", calcFeatures.includes(f.id) ? "rotate-45" : "")} />
+                                 </div>
+                                 <div className={cn("text-[9px] font-medium leading-tight mb-2", calcFeatures.includes(f.id) ? "text-emerald-100" : "text-slate-400")}>
+                                   {(f as any).desc}
+                                 </div>
+                                 <div className={cn("text-[10px] font-mono", calcFeatures.includes(f.id) ? "text-white" : "text-emerald-500")}>
+                                   + {f.price.toLocaleString()} ₽
+                                 </div>
+                               </div>
                              </button>
                            ))}
                          </div>
@@ -794,44 +864,35 @@ export default function App() {
 
                   <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-between h-fit shadow-2xl relative">
                     <div className="absolute -top-4 -left-4 flex flex-col gap-2">
-                      <div className="bg-rose-500 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
+                      <div className="bg-emerald-600 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
                         <Tag size={12} />
-                        <span>Акция -40%</span>
+                        <span>Преференциальные условия -40%</span>
                       </div>
-                      <div className="bg-slate-900 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
-                         <Shield size={12} className="text-emerald-500" />
-                         <span>Бизнес КП</span>
+                      <div className="bg-slate-950 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
+                         <ShieldCheck size={12} className="text-emerald-400" />
+                         <span>Гарантия 1 год</span>
                       </div>
                     </div>
                     <div className="space-y-6">
                        <div className="space-y-4">
                           <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
-                             <span>Компонент</span>
-                             <span>Цена</span>
+                             <span>Состав решения</span>
+                             <span>Инвестиции</span>
                           </div>
                           <div className="space-y-4 max-h-[250px] overflow-y-auto custom-scrollbar pr-2">
                              <div className="flex justify-between items-center text-sm font-bold">
-                                <span className="text-slate-600">Базовая разработка</span>
+                                <span className="text-slate-700">Ядро: {selectedCMS?.label}</span>
                                 <div className="text-right flex flex-col items-end">
-                                  <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">120 000 ₽</span>
-                                  <span className="text-emerald-600 whitespace-nowrap font-mono tracking-tighter">72 000 ₽</span>
+                                  <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">{(selectedCMS?.price || 0).toLocaleString('ru-RU')} ₽</span>
+                                  <span className="text-emerald-600 whitespace-nowrap font-mono tracking-tighter">{((selectedCMS?.price || 0) * 0.6).toLocaleString('ru-RU')} ₽</span>
                                 </div>
                              </div>
-                             {selectedCMS && selectedCMS.id !== 'none' && (
-                               <div className="flex justify-between items-center text-sm font-medium">
-                                  <span className="text-slate-500">{selectedCMS.label}</span>
-                                  <div className="text-right flex flex-col items-end">
-                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">+{selectedCMS.price.toLocaleString('ru-RU')} ₽</span>
-                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">+{(selectedCMS.price * 0.6).toLocaleString('ru-RU')} ₽</span>
-                                  </div>
-                               </div>
-                             )}
-                             {selectedType && selectedType.id !== 'none' && (
+                             {selectedType && selectedType.price !== 0 && (
                                <div className="flex justify-between items-center text-sm font-medium">
                                   <span className="text-slate-500">{selectedType.label}</span>
                                   <div className="text-right flex flex-col items-end">
-                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">{selectedType.price.toLocaleString('ru-RU')} ₽</span>
-                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">{(selectedType.price * 0.6).toLocaleString('ru-RU')} ₽</span>
+                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">+{selectedType.price.toLocaleString('ru-RU')} ₽</span>
+                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">+{(selectedType.price * 0.6).toLocaleString('ru-RU')} ₽</span>
                                   </div>
                                </div>
                              )}
@@ -846,11 +907,11 @@ export default function App() {
                              ))}
                              
                              <div className="pt-2 mt-2 border-t border-slate-50 space-y-1">
-                               <div className="flex justify-between text-[10px] font-bold text-emerald-500 uppercase">
+                               <div className="flex justify-between text-[10px] font-black text-cyan-600 uppercase">
                                  <span>SEO Оптимизация</span>
                                  <span>Бесплатно (Bonus)</span>
                                </div>
-                               <div className="flex justify-between text-[10px] font-bold text-emerald-500 uppercase">
+                               <div className="flex justify-between text-[10px] font-black text-cyan-600 uppercase">
                                  <span>Безопасность (OWASP)</span>
                                  <span>Бесплатно (Bonus)</span>
                                </div>
@@ -889,9 +950,10 @@ export default function App() {
                     </div>
                     <button 
                       onClick={() => setIsContactOpen(true)}
-                      className="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold text-base mt-10 hover:bg-slate-800 transition-all active:scale-95 shadow-xl shadow-slate-900/10"
+                      className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-base mt-10 hover:bg-slate-800 transition-all active:scale-95 shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 uppercase tracking-tighter"
                     >
-                      Получить КП
+                      <span>Забронировать скидку</span>
+                      <ChevronRight size={18} className="text-cyan-400" />
                     </button>
                   </div>
                 </div>
@@ -904,9 +966,13 @@ export default function App() {
                   const originalPrice = originalPriceValue.toLocaleString('ru-RU');
 
                   return (
-                    <div key={tier.id} className={cn("sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden", tier.recommended && "ring-2 ring-slate-900 shadow-2xl")}>
-                      {tier.recommended && <div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Рекомендуем</div>}
-                      <div className="absolute -left-8 top-4 -rotate-45 bg-rose-500 text-white text-[8px] font-bold px-8 py-1 uppercase tracking-tighter shadow-lg">Скидка -40%</div>
+                    <motion.div 
+                      key={tier.id} 
+                      whileHover={{ y: -5, scale: 1.01 }}
+                      className={cn("sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden transition-shadow hover:shadow-2xl hover:shadow-emerald-500/10", tier.recommended && "ring-2 ring-slate-900 shadow-2xl")}
+                    >
+                      {tier.recommended && <div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Выбор рынка</div>}
+                      <div className="absolute -right-8 top-4 rotate-45 bg-rose-500 text-white text-[8px] font-bold px-8 py-1 uppercase tracking-tighter shadow-lg z-20">Скидка -40%</div>
                       
                       <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{tier.name}</h4>
                       <div className="flex flex-col mb-6">
@@ -927,21 +993,21 @@ export default function App() {
                       <div className="w-full bg-slate-50 p-4 rounded-xl mb-8 space-y-2 border border-slate-100">
                          <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
                             <ShieldCheck size={12} />
-                            <span>Безопасность+ Бонус</span>
+                            <span>Безопасность (Enterprise)</span>
                          </div>
                          <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
                             <TrendingUp size={12} />
-                            <span>SEO-Оптимизация Бонус</span>
+                            <span>SEO-Architecture Prep</span>
                          </div>
                       </div>
 
                       <button 
                         onClick={() => {setFormState({...formState, tier: tier.name}); setIsContactOpen(true);}}
-                        className={cn("w-full py-4 rounded-xl font-bold transition-all active:scale-95", tier.recommended ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200")}
+                        className={cn("w-full py-4 rounded-xl font-black transition-all active:scale-95 uppercase tracking-widest text-[10px]", tier.recommended ? "bg-slate-950 text-white shadow-xl shadow-emerald-100" : "bg-slate-100 text-slate-600 hover:bg-slate-200")}
                       >
-                        Заказать со скидкой
+                        Запустить проект
                       </button>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -964,6 +1030,7 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
+
       </main>
 
       {/* FOOTER */}
@@ -974,24 +1041,24 @@ export default function App() {
             <p className="text-slate-400 font-medium max-w-xs">
               Senior Fullstack Engineer. Превращаю сложные технические задачи в элегантные решения.
             </p>
-            <div className="flex gap-4">
-              <a href="https://t.me/SebievTL" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-emerald-500 transition-colors"><MessageSquare size={18} /></a>
-              <a href="mailto:Ahmed1155@mail.ru" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-emerald-500 transition-colors"><Mail size={18} /></a>
+                      <div className="flex gap-4">
+              <a href="https://t.me/SebievTL" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all border border-white/10"><MessageSquare size={18} /></a>
+              <a href="mailto:Ahmed1155@mail.ru" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all border border-white/10"><Mail size={18} /></a>
             </div>
           </div>
           <div>
             <h5 className="font-bold uppercase text-[10px] tracking-widest text-slate-500 mb-8">Навигация</h5>
             <ul className="space-y-4 font-bold text-sm">
-              <li><button onClick={() => setActiveTab('portfolio')} className="hover:text-emerald-500 transition-colors">Портфолио</button></li>
-              <li><button onClick={() => setActiveTab('pricing')} className="hover:text-emerald-500 transition-colors">Услуги и цены</button></li>
+              <li><button onClick={() => setActiveTab('portfolio')} className="hover:text-emerald-400 transition-colors">Портфолио</button></li>
+              <li><button onClick={() => setActiveTab('pricing')} className="hover:text-emerald-400 transition-colors">Цены</button></li>
             </ul>
           </div>
           <div className="space-y-6">
             <h5 className="font-bold uppercase text-[10px] tracking-widest text-slate-500 mb-8">Контакты</h5>
             <div className="space-y-4 font-bold text-sm">
-              <p>TG: <a href="https://t.me/SebievTL" className="hover:text-emerald-500">@SebievTL</a></p>
-              <p>Телефон: <a href="tel:89259409404" className="hover:text-emerald-500">8 925 940-94-04</a></p>
-              <p>Почта: <a href="mailto:Ahmed1155@mail.ru" className="hover:text-emerald-500">Ahmed1155@mail.ru</a></p>
+              <p>TG: <a href="https://t.me/SebievTL" className="hover:text-emerald-400">@SebievTL</a></p>
+              <p>Телефон: <a href="tel:89259409404" className="hover:text-emerald-400">8 925 940-94-04</a></p>
+              <p>Почта: <a href="mailto:Ahmed1155@mail.ru" className="hover:text-emerald-400">Ahmed1155@mail.ru</a></p>
               <p className="text-slate-500 font-medium">Доступен: Пн - Пт, 10:00 - 20:00 МСК</p>
             </div>
           </div>
@@ -1075,12 +1142,12 @@ export default function App() {
                             type="text" 
                             name="name"
                             autoComplete="name"
-                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg bg-transparent" 
+                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-black text-lg bg-transparent uppercase tracking-tighter" 
                             placeholder=" "
                             value={formState.name}
                             onChange={e => setFormState({...formState, name: e.target.value})}
                           />
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-600">
                              Как вас зовут?
                           </label>
                         </div>
@@ -1090,32 +1157,32 @@ export default function App() {
                             type="tel" 
                             name="tel"
                             autoComplete="tel"
-                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg bg-transparent" 
+                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-black text-lg bg-transparent uppercase tracking-tighter" 
                             placeholder=" "
                             value={formState.phone}
                             onChange={e => setFormState({...formState, phone: e.target.value})}
                           />
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-600">
                              Телефон
                           </label>
                         </div>
                       </div>
                       
-                      <div className="space-y-1 group relative">
-                        <input 
-                          required
-                          type="text" 
-                          name="contact"
-                          autoComplete="off"
-                          className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg bg-transparent" 
-                          placeholder=" "
-                          value={formState.contact}
-                          onChange={e => setFormState({...formState, contact: e.target.value})}
-                        />
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
-                           Email или Telegram
-                        </label>
-                      </div>
+                        <div className="space-y-1 group relative">
+                          <input 
+                            required
+                            type="text" 
+                            name="contact"
+                            autoComplete="off"
+                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-black text-lg bg-transparent uppercase tracking-tighter" 
+                            placeholder=" "
+                            value={formState.contact}
+                            onChange={e => setFormState({...formState, contact: e.target.value})}
+                          />
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-600">
+                             Email или Telegram
+                          </label>
+                        </div>
 
                       <div className="space-y-1 group relative">
                         <textarea 

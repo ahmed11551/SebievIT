@@ -13,7 +13,7 @@ export const generateCP = (data: {
     const doc = new jsPDF();
 
     // Professional Header
-    doc.setFillColor(15, 23, 42); // slate-900
+    doc.setFillColor(6, 78, 59); // emerald-900
     doc.rect(0, 0, 210, 50, 'F');
     
     // Logo Icon (Stylized Abstract Logo)
@@ -31,8 +31,8 @@ export const generateCP = (data: {
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text('SEBIEV SOFTWARE ARCHITECTURE', 40, 32);
-    doc.text('High-Performance Fullstack Solutions', 40, 37);
+    doc.text('SEBIEV FULLSTACK ENGINEERING', 40, 32);
+    doc.text('High-Performance Web Solutions', 40, 37);
 
     // Client Info Section (Shifted down for header)
     doc.setTextColor(100, 116, 139); // slate-500
@@ -64,13 +64,11 @@ export const generateCP = (data: {
     const selectedFeatures = data.options.features.filter((f: any) => data.calcFeatures.includes(f.id));
 
     const tableRows = [
-      ['Platform Core (React/Node.js/Next.js)', '120,000 RUB'],
-      [selectedCMS.label.replace(/[^a-zA-Z0-9\s\(\)\/]/g, '') || 'Custom Architecture', selectedCMS.price > 0 ? `+${selectedCMS.price.toLocaleString()} RUB` : 'Included'],
-      [selectedType.label.replace(/[^a-zA-Z0-9\s\(\)\/]/g, '') || 'New Development', selectedType.price !== 0 ? `${selectedType.price.toLocaleString()} RUB` : 'Standard'],
-      ...selectedFeatures.map((f: any) => [f.label.replace(/[^a-zA-Z0-9\s\(\)\/]/g, '') || 'Feature', `+${f.price.toLocaleString()} RUB`]),
-      ['Performance & SSR Optimization', 'FREE'],
-      ['Security Hardening (OWASP Top 10)', 'FREE'],
-      ['3 Months Premium Support', 'FREE'],
+      [selectedCMS.label || 'Custom Architecture', selectedCMS.price > 0 ? `${selectedCMS.price.toLocaleString()} RUB` : 'Included'],
+      [selectedType.label || 'New Development', selectedType.price !== 0 ? `${selectedType.price.toLocaleString()} RUB` : 'Standard'],
+      ...selectedFeatures.map((f: any) => [f.label || 'Feature', `+${f.price.toLocaleString()} RUB`]),
+      ['Performance & SEO Optimization', 'FREE'],
+      ['Security Hardening (OWASP)', 'FREE'],
       ['SPECIAL SPRING DISCOUNT', '-40%']
     ];
 
@@ -80,7 +78,7 @@ export const generateCP = (data: {
       body: tableRows,
       theme: 'grid',
       headStyles: { 
-        fillColor: [15, 23, 42], 
+        fillColor: [16, 185, 129], 
         textColor: [255, 255, 255], 
         fontStyle: 'bold',
         fontSize: 10,
@@ -101,7 +99,7 @@ export const generateCP = (data: {
     const finalY = (doc as any).lastAutoTable.finalY || 180;
 
     // Summary Box
-    doc.setFillColor(15, 23, 42); // slate-900
+    doc.setFillColor(6, 78, 59); // emerald-900
     doc.rect(20, finalY + 10, 170, 35, 'F');
     
     doc.setFontSize(14);
@@ -118,10 +116,10 @@ export const generateCP = (data: {
     
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(16, 185, 129); // emerald-500
-    doc.text('[+] SEO Basic Setup (Meta tags, SSR, Speed Index)', 25, finalY + 75);
-    doc.text('[+] Deployment to Production (Vercel/DigitalOcean/Hetzner)', 25, finalY + 82);
-    doc.text('[+] Technical Documentation and Screen Guidance', 25, finalY + 89);
+    doc.setTextColor(16, 185, 129); // emerald-600
+    doc.text('[+] Elite SEO Architecture Setup', 25, finalY + 75);
+    doc.text('[+] Enterprise Deployment Suite', 25, finalY + 82);
+    doc.text('[+] 12 Months Source Code Warranty', 25, finalY + 89);
 
     // Terms
     doc.setFontSize(10);
@@ -132,7 +130,7 @@ export const generateCP = (data: {
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 116, 139);
-    doc.text('• Timeline: Estimated starts from 14 business days.', 20, finalY + 120);
+    doc.text('• Timeline: Estimated starts from 10 business days.', 20, finalY + 120);
     doc.text('• Guarantee: 12 months full source code warranty.', 20, finalY + 127);
     doc.text('• Payment: 50% upfront, 50% upon project completion.', 20, finalY + 134);
 
