@@ -107,40 +107,40 @@ const PROJECTS = [
 const PRICING_TIERS = [
   {
     id: "landing",
-    name: "Business Entry / MVP",
+    name: "Лендинг / Сайт-визитка",
     price: "от 85 000 ₽",
     description: "Быстрый запуск продукта с архитектурой «на вырост». Идеально для проверки гипотез без техдолга.",
     features: [
-      "Дизайн High-End уровня",
+      "Индивидуальный дизайн High-End",
       "Технологии: React / Next.js",
-      "SEO-подготовка",
+      "Полная SEO-подготовка",
       "Запуск за 10-14 дней"
     ],
     recommended: false
   },
   {
     id: "corporate",
-    name: "Enterprise Core",
+    name: "Корпоративный сайт / Магазин",
     price: "от 210 000 ₽",
     description: "Комплексная экосистема для лидеров индустрии. Автоматизация, безопасность и масштабируемость.",
     features: [
-      "Microservices Architecture",
-      "Интеграция ERP / 1C",
-      "Безопасность OWASP",
-      "SLA 12 месяцев"
+      "Микросервисная архитектура",
+      "Интеграция с ERP / 1C",
+      "Безопасность по стандарту OWASP",
+      "SLA и поддержка 12 месяцев"
     ],
     recommended: true
   },
   {
     id: "premium",
-    name: "Individual Solution",
+    name: "Индивидуальная разработка",
     price: "от 430 000 ₽",
-    description: "Сложные нагруженные системы, Big Data и финансовые инструменты.",
+    description: "Сложные нагруженные системы, Big Data и финансовые инструменты для бизнеса.",
     features: [
-      "Highload (100k+ RPS)",
-      "Global K8s Clusters",
-      "Advanced AI Logic",
-      "SLA 99.99%"
+      "Highload (100k+ запросов/сек)",
+      "Кластеры Kubernetes",
+      "Продвинутая AI-логика",
+      "SLA 99.99% (Гарантия аптайма)"
     ],
     recommended: false
   }
@@ -148,21 +148,21 @@ const PRICING_TIERS = [
 
 const CALCULATOR_OPTIONS = {
   cms: [
-    { id: 'custom', label: 'Custom Next.js', price: 160000, desc: 'Бескомпромиссная скорость и имидж.' },
-    { id: 'strapi', label: 'Modern Headless', price: 95000, desc: 'Гибкое управление данными.' },
+    { id: 'custom', label: 'Кастомный Next.js', price: 160000, desc: 'Бескомпромиссная скорость и имидж.' },
+    { id: 'strapi', label: 'Headless / Strapi', price: 95000, desc: 'Гибкое управление данными.' },
     { id: 'bitrix', label: '1С-Битрикс PRO', price: 110000, desc: 'Профессиональное решение для ритейла.' },
     { id: 'wp', label: 'WordPress PRO', price: 75000, desc: 'Для контентных проектов и блогов.' },
     { id: 'tilda', label: 'Tilda Luxury', price: 45000, desc: 'Премиальный старт за 5-7 дней.' }
   ],
   type: [
-    { id: 'new', label: 'Zero Path', price: 0, desc: 'Разработка с чистого листа.' },
-    { id: 'refactor', label: 'Re-Engineering', price: 85000, desc: 'Ускорение текущих систем.' }
+    { id: 'new', label: 'С чистого листа', price: 0, desc: 'Разработка новой системы.' },
+    { id: 'refactor', label: 'Реинжиниринг / Ускорение', price: 85000, desc: 'Оптимизация текущих систем.' }
   ],
   features: [
-    { id: 'ai', label: 'AI Engine', price: 95000, desc: 'LLM-ассистенты и автоматизация.' },
-    { id: 'legal', label: 'Security Suite', price: 55000, desc: 'Защита данных и ФЗ-152.' },
-    { id: 'performance', label: 'Optimization', price: 35000, desc: 'Загрузка сайта <500мс.' },
-    { id: 'seo', label: 'SEO Conquest', price: 50000, desc: 'Техническое превосходство.' }
+    { id: 'ai', label: 'AI Модуль (ИИ)', price: 95000, desc: 'Ассистенты и автоматизация.' },
+    { id: 'legal', label: 'Безопасность', price: 55000, desc: 'Защита данных и ФЗ-152.' },
+    { id: 'performance', label: 'Оптимизация скорости', price: 35000, desc: 'Загрузка сайта <500мс.' },
+    { id: 'seo', label: 'SEO Продвижение', price: 50000, desc: 'Техническое превосходство.' }
   ]
 };
 
@@ -451,7 +451,7 @@ export default function App() {
       <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-slate-100 w-full overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center relative">
           <div className="flex items-center gap-4 group cursor-pointer" onClick={() => (window.scrollTo({top:0, behavior:'smooth'}), setActiveTab('portfolio'))}>
-            <div className="w-12 h-12 bg-slate-950 rounded-2xl flex items-center justify-center text-emerald-500 shadow-2xl transition-all group-hover:bg-emerald-600 group-hover:text-white shrink-0 group-hover:rotate-6">
+            <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all hover:bg-emerald-700 hover:rotate-6 shrink-0">
                <Cpu size={28} />
             </div>
             <div className="flex flex-col">
@@ -479,7 +479,7 @@ export default function App() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={cn(
                   "px-8 py-2.5 rounded-xl text-[10px] font-black transition-all uppercase tracking-widest",
-                  activeTab === tab.id ? "bg-slate-950 text-white shadow-xl" : "text-slate-500 hover:text-slate-950"
+                  activeTab === tab.id ? "bg-emerald-600 text-white shadow-xl shadow-emerald-500/20" : "text-slate-500 hover:text-slate-950"
                 )}
               >
                 {tab.label}
@@ -492,7 +492,7 @@ export default function App() {
               onClick={() => setIsContactOpen(true)}
               className="sleek-button-primary px-8"
             >
-              Start Project
+              Начать проект
             </button>
           </div>
         </div>
@@ -564,48 +564,57 @@ export default function App() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                     <a href="https://t.me/SebievTL" className="flex-1 sleek-button-primary flex items-center justify-center gap-3 py-4 shadow-xl shadow-emerald-200 active:scale-95 transition-all">
+                     <button 
+                       onClick={() => setIsContactOpen(true)}
+                       className="flex-1 sleek-button-primary flex items-center justify-center gap-3 py-4 shadow-xl shadow-emerald-200 active:scale-95 transition-all"
+                     >
                        <AnimatedIcon icon={MessageSquare} size={20} />
                        <span className="font-black uppercase tracking-tighter">Обсудить проект</span>
-                     </a>
-                     <a href="tel:89259409404" className="flex-1 sleek-button-secondary flex items-center justify-center gap-3 py-4 border-slate-200 active:scale-95 transition-all">
+                     </button>
+                     <a 
+                       href="tel:89259409404" 
+                       className="flex-1 sleek-button-secondary flex items-center justify-center gap-3 py-4 border-slate-200 active:scale-95 transition-all"
+                     >
                        <AnimatedIcon icon={Phone} size={20} />
                        <span className="font-black uppercase tracking-tighter">Связаться голосом</span>
                      </a>
-                     <button onClick={sharePortfolio} className="w-14 h-14 hidden sm:flex items-center justify-center bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors shrink-0 shadow-sm">
+                     <button 
+                       onClick={sharePortfolio} 
+                       className="w-14 h-14 hidden sm:flex items-center justify-center bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors shrink-0 shadow-sm"
+                     >
                        <AnimatedIcon icon={Share2} size={20} />
                      </button>
                   </div>
                 </div>
 
                 <div className="w-full lg:w-1/3 order-first lg:order-last">
-                  <div className="bg-slate-950 p-6 sm:p-10 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group border border-white/5">
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="bg-emerald-600 p-6 sm:p-10 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group border border-white/20">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <motion.div 
                       animate={{ rotate: [0, 10, 0] }}
                       transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-                      className="absolute -top-6 -right-6 text-emerald-500/20 blur-sm"
+                      className="absolute -top-6 -right-6 text-white/10 blur-sm"
                     >
                       <ShieldCheck size={120} />
                     </motion.div>
-                    <h4 className="text-xl sm:text-2xl font-black mb-6 uppercase italic">Stack Architecture</h4>
+                    <h4 className="text-xl sm:text-2xl font-black mb-6 uppercase italic">Архитектура стека</h4>
                     <div className="space-y-6">
                       {[
-                        { label: 'Стабильность сервера', val: 'Enterprise Standard (NestJS)', icon: Code2, color: 'text-emerald-400' },
-                        { label: 'Uptime 99.9%', val: 'K8s Auto-scaling', icon: Server, color: 'text-purple-400' },
-                        { label: 'Скорость доступа', val: 'Low-latency Data Architecture', icon: Database, color: 'text-blue-400' },
-                        { label: 'Интерфейс', val: 'High-End UX/UI Systems', icon: Globe, color: 'text-cyan-400' }
+                        { label: 'Стабильность сервера', val: 'Enterprise (NestJS)', icon: Code2, color: 'text-white' },
+                        { label: 'Uptime 99.9%', val: 'K8s Масштабирование', icon: Server, color: 'text-white' },
+                        { label: 'Скорость доступа', val: 'Low-latency архитектура', icon: Database, color: 'text-white' },
+                        { label: 'Интерфейс', val: 'High-End UX/UI системы', icon: Globe, color: 'text-white' }
                       ].map((s, i) => (
                         <div key={i} className="flex gap-4 items-start">
-                          <div className={cn("p-2 bg-white/5 rounded-lg shrink-0 border border-white/10", s.color)}><s.icon size={16} /></div>
+                          <div className={cn("p-2 bg-white/10 rounded-lg shrink-0 border border-white/20", s.color)}><s.icon size={16} /></div>
                           <div className="space-y-1">
-                            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{s.label}</div>
-                            <div className="text-sm font-bold text-slate-200">{s.val}</div>
+                            <div className="text-[10px] font-bold text-emerald-100 uppercase tracking-widest">{s.label}</div>
+                            <div className="text-sm font-bold text-white">{s.val}</div>
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div className="mt-8 pt-8 border-t border-white/10 flex justify-between items-center text-[10px] font-mono text-slate-500">
+                    <div className="mt-8 pt-8 border-t border-white/20 flex justify-between items-center text-[10px] font-mono text-emerald-100">
                       <span>ЛИЦЕНЗИРОВАН</span>
                       <span>v2.1.25</span>
                     </div>
@@ -752,22 +761,22 @@ export default function App() {
 
 
               {/* CALCULATOR SECTION */}
-              <div className="bg-slate-950 rounded-[3rem] p-8 sm:p-12 lg:p-20 text-white relative overflow-hidden shadow-2xl">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 rounded-full blur-[120px] -mr-32 -mt-32 animate-pulse" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px] -ml-32 -mb-32" />
+              <div className="bg-emerald-50 rounded-[3rem] p-8 sm:p-12 lg:p-20 text-slate-900 relative overflow-hidden shadow-sm border border-emerald-100">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-200/20 rounded-full blur-[120px] -mr-32 -mt-32" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-200/20 rounded-full blur-[100px] -ml-32 -mb-32" />
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
                   <div className="space-y-12">
                      <div>
-                       <h3 className="text-3xl font-black mb-4 uppercase tracking-tighter italic">Технический Аудит & Сметы</h3>
-                       <p className="text-slate-400 font-medium">Выберите архитектурный стек для оценки ресурсов и сроков реализации решения.</p>
+                       <h3 className="text-3xl font-black mb-4 uppercase tracking-tighter italic">Расчет окупаемости</h3>
+                       <p className="text-slate-500 font-medium">Выберите технологическое ядро и дополнительные модули для точной оценки стоимости.</p>
                      </div>
 
                      <div className="space-y-8">
                        <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                            <Layers size={12} className="text-emerald-500" />
-                           Ядро архитектуры
+                           Технологическое ядро
                          </label>
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                            {CALCULATOR_OPTIONS.cms.map(c => (
@@ -776,7 +785,7 @@ export default function App() {
                                onClick={() => setCalcCMS(c.id)}
                                className={cn(
                                  "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden group min-h-[140px] flex flex-col justify-between",
-                                 calcCMS === c.id ? "bg-white text-slate-950 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30 hover:bg-white/5"
+                                 calcCMS === c.id ? "bg-white text-slate-950 border-emerald-200 shadow-xl scale-[1.02]" : "bg-white/50 border-slate-200 hover:border-emerald-300 hover:bg-white"
                                )}
                              >
                                 {calcCMS === c.id && <motion.div layoutId="calcCMSactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600" />}
@@ -786,8 +795,8 @@ export default function App() {
                                     {c.desc}
                                   </div>
                                 </div>
-                                <div className={cn("mt-4 text-xs font-mono font-bold", calcCMS === c.id ? "text-emerald-600" : "text-emerald-400")}>
-                                  {c.price > 0 ? `${c.price.toLocaleString()} ₽` : 'Enterprise Standard'}
+                                <div className={cn("mt-4 text-xs font-mono font-bold", calcCMS === c.id ? "text-emerald-600" : "text-emerald-500")}>
+                                  {c.price > 0 ? `${c.price.toLocaleString()} ₽` : 'Стандарт индустрии'}
                                 </div>
                              </button>
                            ))}
@@ -795,9 +804,9 @@ export default function App() {
                        </div>
 
                        <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                            <Zap size={12} className="text-emerald-500" />
-                           Тип работ
+                           Формат разработки
                          </label>
                          <div className="flex flex-col sm:flex-row gap-3">
                            {CALCULATOR_OPTIONS.type.map(t => (
@@ -806,7 +815,7 @@ export default function App() {
                                onClick={() => setCalcType(t.id)}
                                className={cn(
                                  "flex-1 px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden min-h-[100px] flex flex-col justify-between",
-                                 calcType === t.id ? "bg-white text-slate-900 border-white shadow-xl scale-[1.02]" : "border-white/10 hover:border-white/30 hover:bg-white/5"
+                                 calcType === t.id ? "bg-white text-slate-900 border-emerald-200 shadow-xl scale-[1.02]" : "bg-white/50 border-slate-200 hover:border-emerald-300 hover:bg-white"
                                )}
                              >
                                 {calcType === t.id && <motion.div layoutId="calcTypeactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600" />}
@@ -816,7 +825,7 @@ export default function App() {
                                     {t.desc}
                                   </div>
                                 </div>
-                                <div className={cn("mt-2 text-[9px] font-mono font-bold", calcType === t.id ? "text-emerald-600" : "text-emerald-400")}>
+                                <div className={cn("mt-2 text-[9px] font-mono font-bold", calcType === t.id ? "text-emerald-600" : "text-emerald-500")}>
                                   {t.price > 0 ? `+ ${t.price.toLocaleString()} ₽` : 'Базовая лицензия'}
                                 </div>
                              </button>
@@ -825,7 +834,7 @@ export default function App() {
                        </div>
 
                        <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                            <Cpu size={12} className="text-emerald-500" />
                            Дополнительно
                          </label>
@@ -840,10 +849,10 @@ export default function App() {
                                }}
                                className={cn(
                                  "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left flex justify-between items-center group",
-                                 calcFeatures.includes(f.id) ? "bg-emerald-500 text-white border-emerald-500" : "border-white/10 hover:border-white/30"
+                                 calcFeatures.includes(f.id) ? "bg-emerald-600 text-white border-emerald-600 shadow-lg" : "bg-white/50 border-slate-200 hover:border-emerald-300 hover:bg-white"
                                )}
                              >
-                               <div>
+                               <div className="w-full">
                                  <div className="text-sm font-bold flex justify-between items-start mb-1 gap-2">
                                    <span>{f.label}</span>
                                    <PlusCircle size={14} className={cn("transition-transform shrink-0", calcFeatures.includes(f.id) ? "rotate-45" : "")} />
@@ -851,7 +860,7 @@ export default function App() {
                                  <div className={cn("text-[9px] font-medium leading-tight mb-2", calcFeatures.includes(f.id) ? "text-emerald-100" : "text-slate-400")}>
                                    {(f as any).desc}
                                  </div>
-                                 <div className={cn("text-[10px] font-mono", calcFeatures.includes(f.id) ? "text-white" : "text-emerald-500")}>
+                                 <div className={cn("text-[10px] font-mono", calcFeatures.includes(f.id) ? "text-white" : "text-emerald-600")}>
                                    + {f.price.toLocaleString()} ₽
                                  </div>
                                </div>
@@ -862,18 +871,18 @@ export default function App() {
                      </div>
                   </div>
 
-                  <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-between h-fit shadow-2xl relative">
+                  <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-between h-fit shadow-2xl border border-emerald-100 relative">
                     <div className="absolute -top-4 -left-4 flex flex-col gap-2">
                       <div className="bg-emerald-600 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
                         <Tag size={12} />
-                        <span>Преференциальные условия -40%</span>
+                        <span>Скидка -40% активирована</span>
                       </div>
-                      <div className="bg-slate-950 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
-                         <ShieldCheck size={12} className="text-emerald-400" />
+                      <div className="bg-white text-slate-900 border border-emerald-100 text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
+                         <ShieldCheck size={12} className="text-emerald-600" />
                          <span>Гарантия 1 год</span>
                       </div>
                     </div>
-                    <div className="space-y-6">
+                    <div className="space-y-6 pt-4">
                        <div className="space-y-4">
                           <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
                              <span>Состав решения</span>
@@ -907,13 +916,13 @@ export default function App() {
                              ))}
                              
                              <div className="pt-2 mt-2 border-t border-slate-50 space-y-1">
-                               <div className="flex justify-between text-[10px] font-black text-cyan-600 uppercase">
+                               <div className="flex justify-between text-[10px] font-black text-emerald-600 uppercase">
                                  <span>SEO Оптимизация</span>
-                                 <span>Бесплатно (Bonus)</span>
+                                 <span>Включено</span>
                                </div>
-                               <div className="flex justify-between text-[10px] font-black text-cyan-600 uppercase">
+                               <div className="flex justify-between text-[10px] font-black text-emerald-600 uppercase">
                                  <span>Безопасность (OWASP)</span>
-                                 <span>Бесплатно (Bonus)</span>
+                                 <span>Включено</span>
                                </div>
                              </div>
                           </div>
@@ -921,7 +930,7 @@ export default function App() {
                        
                        <div className="pt-6 border-t-2 border-dashed border-slate-100 space-y-4">
                          <div className="flex justify-between items-end">
-                            <div className="text-xs font-bold text-slate-400 uppercase">Итоговая оценка</div>
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Итоговая оценка</div>
                             <div className="text-xs font-bold text-rose-500 uppercase flex items-center gap-1">
                                <Percent size={10} />
                                Экономия 40%
@@ -939,21 +948,21 @@ export default function App() {
 
                        <div className="space-y-3 pt-2">
                           <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                             <span>Срок</span>
+                             <span>Срок реализации</span>
                              <span className="text-slate-900">от 10 рабочих дней</span>
                           </div>
                           <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                             <span>Гарантия</span>
-                             <span className="text-slate-900">12 месяцев</span>
+                             <span>Тех. поддержка</span>
+                             <span className="text-slate-900">Бесплатно 1 год</span>
                           </div>
                        </div>
                     </div>
                     <button 
                       onClick={() => setIsContactOpen(true)}
-                      className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-base mt-10 hover:bg-slate-800 transition-all active:scale-95 shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 uppercase tracking-tighter"
+                      className="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black text-base mt-10 hover:bg-emerald-700 transition-all active:scale-95 shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-3 uppercase tracking-tighter"
                     >
-                      <span>Забронировать скидку</span>
-                      <ChevronRight size={18} className="text-cyan-400" />
+                      <span>Зафиксировать скидку</span>
+                      <ChevronRight size={18} />
                     </button>
                   </div>
                 </div>
@@ -997,13 +1006,13 @@ export default function App() {
                          </div>
                          <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
                             <TrendingUp size={12} />
-                            <span>SEO-Architecture Prep</span>
+                            <span>Микроразметка & SEO</span>
                          </div>
                       </div>
 
                       <button 
                         onClick={() => {setFormState({...formState, tier: tier.name}); setIsContactOpen(true);}}
-                        className={cn("w-full py-4 rounded-xl font-black transition-all active:scale-95 uppercase tracking-widest text-[10px]", tier.recommended ? "bg-slate-950 text-white shadow-xl shadow-emerald-100" : "bg-slate-100 text-slate-600 hover:bg-slate-200")}
+                        className={cn("w-full py-4 rounded-xl font-black transition-all active:scale-95 uppercase tracking-widest text-[10px]", tier.recommended ? "bg-emerald-600 text-white shadow-xl shadow-emerald-500/20" : "bg-slate-100 text-slate-600 hover:bg-slate-200")}
                       >
                         Запустить проект
                       </button>
@@ -1034,32 +1043,32 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-slate-900 py-24 text-white">
+      <footer className="bg-slate-50 py-24 text-slate-900 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16">
           <div className="space-y-6">
-            <h4 className="text-2xl font-bold">Ахмед Себиев</h4>
-            <p className="text-slate-400 font-medium max-w-xs">
-              Senior Fullstack Engineer. Превращаю сложные технические задачи в элегантные решения.
+            <h4 className="text-2xl font-bold uppercase tracking-tighter">Ахмед Себиев</h4>
+            <p className="text-slate-500 font-medium max-w-xs leading-relaxed">
+              Senior Fullstack Engineer. Архитектор сложных систем с фокусом на безопасность и окупаемость.
             </p>
-                      <div className="flex gap-4">
-              <a href="https://t.me/SebievTL" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all border border-white/10"><MessageSquare size={18} /></a>
-              <a href="mailto:Ahmed1155@mail.ru" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all border border-white/10"><Mail size={18} /></a>
+            <div className="flex gap-4">
+              <a href="https://t.me/SebievTL" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all border border-slate-200 shadow-sm"><MessageSquare size={18} /></a>
+              <a href="mailto:Ahmed1155@mail.ru" className="w-10 h-10 rounded-xl bg-white flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all border border-slate-200 shadow-sm"><Mail size={18} /></a>
             </div>
           </div>
           <div>
-            <h5 className="font-bold uppercase text-[10px] tracking-widest text-slate-500 mb-8">Навигация</h5>
+            <h5 className="font-bold uppercase text-[10px] tracking-widest text-slate-400 mb-8">Навигация</h5>
             <ul className="space-y-4 font-bold text-sm">
-              <li><button onClick={() => setActiveTab('portfolio')} className="hover:text-emerald-400 transition-colors">Портфолио</button></li>
-              <li><button onClick={() => setActiveTab('pricing')} className="hover:text-emerald-400 transition-colors">Цены</button></li>
+              <li><button onClick={() => { setActiveTab('portfolio'); window.scrollTo({top:0, behavior:'smooth'}); }} className="hover:text-emerald-600 transition-colors uppercase tracking-tight">Портфолио проектов</button></li>
+              <li><button onClick={() => { setActiveTab('pricing'); window.scrollTo({top:0, behavior:'smooth'}); }} className="hover:text-emerald-600 transition-colors uppercase tracking-tight">Цены и калькулятор</button></li>
             </ul>
           </div>
           <div className="space-y-6">
-            <h5 className="font-bold uppercase text-[10px] tracking-widest text-slate-500 mb-8">Контакты</h5>
+            <h5 className="font-bold uppercase text-[10px] tracking-widest text-slate-400 mb-8">Прямая связь</h5>
             <div className="space-y-4 font-bold text-sm">
-              <p>TG: <a href="https://t.me/SebievTL" className="hover:text-emerald-400">@SebievTL</a></p>
-              <p>Телефон: <a href="tel:89259409404" className="hover:text-emerald-400">8 925 940-94-04</a></p>
-              <p>Почта: <a href="mailto:Ahmed1155@mail.ru" className="hover:text-emerald-400">Ahmed1155@mail.ru</a></p>
-              <p className="text-slate-500 font-medium">Доступен: Пн - Пт, 10:00 - 20:00 МСК</p>
+              <p>Telegram: <a href="https://t.me/SebievTL" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">@SebievTL</a></p>
+              <p>Моб. телефон: <a href="tel:89259409404" className="text-emerald-600 hover:underline">8 925 940-94-04</a></p>
+              <p>Email: <a href="mailto:Ahmed1155@mail.ru" className="text-emerald-600 hover:underline">Ahmed1155@mail.ru</a></p>
+              <p className="text-slate-400 font-medium text-xs">Доступен для обсуждения: Пн — Пт, 10:00 — 20:00 МСК</p>
             </div>
           </div>
         </div>
@@ -1248,9 +1257,9 @@ export default function App() {
                       className="flex flex-col items-center text-center space-y-8 py-4"
                     >
                       <div className="relative">
-                        <div className="w-24 h-24 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-2xl rotate-3">
-                           <Code2 size={48} className="text-emerald-500" />
-                           <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-slate-900 shadow-lg -rotate-12">
+                        <div className="w-24 h-24 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-2xl rotate-3">
+                           <Code2 size={48} className="text-white" />
+                           <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-emerald-600 shadow-lg -rotate-12">
                               <CheckCircle2 size={16} strokeWidth={3} />
                            </div>
                         </div>
@@ -1265,7 +1274,7 @@ export default function App() {
                       <div className="w-full grid grid-cols-1 gap-3">
                          <button 
                            onClick={downloadCP}
-                           className="w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-slate-900 hover:bg-white hover:text-slate-900 group"
+                           className="w-full bg-emerald-600 text-white py-5 rounded-2xl text-lg font-bold shadow-xl shadow-emerald-500/20 transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-emerald-600 hover:bg-white hover:text-emerald-700 group"
                          >
                            <Download size={20} className="group-hover:translate-y-1 transition-transform" />
                            <span>Скачать КП (PDF)</span>
@@ -1275,7 +1284,7 @@ export default function App() {
                             href={`https://t.me/SebievTL?text=${encodeURIComponent(`Ахмед, я только что отправил расчет проекта с сайта! Меня зовут ${formState.name}.`)}`} 
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-full bg-slate-50 text-slate-900 py-5 rounded-2xl text-lg font-bold border border-slate-100 transition-all active:scale-95 flex items-center justify-center gap-3 hover:bg-white hover:border-emerald-200"
+                            className="w-full bg-slate-50 text-slate-900 py-5 rounded-2xl text-lg font-bold border border-slate-200 transition-all active:scale-95 flex items-center justify-center gap-3 hover:bg-white hover:border-emerald-200"
                          >
                             <MessageSquare size={20} className="text-emerald-500" />
                             <span>Написать в Telegram</span>
@@ -1283,7 +1292,7 @@ export default function App() {
 
                          <button 
                            onClick={closeContact}
-                           className="w-full text-slate-400 font-bold py-4 hover:text-slate-900 transition-colors"
+                           className="w-full text-slate-400 font-bold py-4 hover:text-slate-900 transition-colors uppercase tracking-widest text-[10px]"
                          >
                            Вернуться на сайт
                          </button>
