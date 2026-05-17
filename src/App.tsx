@@ -25,6 +25,7 @@ import {
   Zap,
   Phone,
   MessageSquare,
+  Github,
   ArrowUp,
   Share2,
   Star,
@@ -258,7 +259,7 @@ const SectionHeading = ({ children, subtitle, hasDiscount }: { children: React.R
     <motion.h2 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
-      className="text-3xl sm:text-4xl font-black tracking-tighter text-slate-950 uppercase"
+      className="text-2xl sm:text-4xl font-black tracking-tighter text-slate-950 uppercase leading-none"
     >
       {children}
     </motion.h2>
@@ -359,8 +360,18 @@ export default function App() {
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
+
+    // QA Check: validation
+    if (formState.name.trim().length < 2) {
+      setFormError('Пожалуйста, введите ваше имя.');
+      return;
+    }
     if (!formState.phone.match(/^\+?[\d\s-]{10,24}$/)) {
-      setFormError('Пожалуйста, введите корректный номер телефона (минимум 10 цифр).');
+      setFormError('Пожалуйста, введите корректный номер телефона.');
+      return;
+    }
+    if (formState.message.trim().length < 5) {
+      setFormError('Пожалуйста, опишите вашу задачу подробнее.');
       return;
     }
     
@@ -441,35 +452,32 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen font-sans selection:bg-emerald-100 selection:text-emerald-900 scroll-smooth overflow-x-hidden w-full mesh-background relative">
-      <div className="fixed inset-0 pointer-events-none noise-filter z-0" />
+    <div className="min-h-screen font-sans selection:bg-emerald-100 selection:text-emerald-900 scroll-smooth overflow-x-hidden w-full bg-white relative technical-grid">
+      <div className="hidden sm:block fixed inset-0 pointer-events-none noise-filter z-0" />
       
       {/* PROGRESS BAR */}
-      <motion.div className="fixed top-0 left-0 right-0 h-1 bg-emerald-600 origin-left z-[100]" style={{ scaleX }} />
-
       {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-slate-100 w-full overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center relative">
-          <div className="flex items-center gap-4 group cursor-pointer" onClick={() => (window.scrollTo({top:0, behavior:'smooth'}), setActiveTab('portfolio'))}>
-            <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all hover:bg-emerald-700 hover:rotate-6 shrink-0">
-               <Cpu size={28} />
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-3xl w-full overflow-hidden sm:border-b sm:border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-24 flex justify-between items-center relative">
+          <div className="flex items-center gap-3 sm:gap-5 group cursor-pointer" onClick={() => (window.scrollTo({top:0, behavior:'smooth'}), setActiveTab('portfolio'))}>
+            <div className="w-10 h-10 sm:w-16 h-16 bg-[#00a86b] rounded-2xl flex items-center justify-center text-white shadow-xl transition-all hover:rotate-6 shrink-0 active:scale-95">
+               <Cpu size={22} className="sm:hidden" />
+               <Cpu size={36} className="hidden sm:block" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-2xl font-black tracking-tighter text-slate-950 uppercase leading-none">
-                SEBIEV <span className="text-emerald-600">FULLSTACK</span>
+              <h1 className="text-sm sm:text-3xl font-black tracking-tighter text-slate-950 uppercase leading-none">
+                SEBIEV <span className="text-[#00a86b]">FULLSTACK</span>
               </h1>
-              <div className="flex gap-2 text-[9px] font-black text-slate-400 mt-1 uppercase tracking-[0.2em] leading-none">
-                <span className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Fullstack Engineering
-                </span>
-                <span className="opacity-20">•</span>
-                <span>Rel. 2026</span>
+              <div className="flex gap-2 text-[6px] sm:text-[10px] font-mono font-bold text-slate-400 mt-1 uppercase tracking-[0.1em] leading-none items-center">
+                <span>FULLSTACK ENGINEERING</span>
+                <span className="opacity-40">•</span>
+                <span>REL. 2026</span>
               </div>
             </div>
           </div>
 
-          <nav className="hidden md:flex gap-1 bg-slate-50 p-1.5 rounded-2xl border border-slate-200/50">
+
+          <nav className="hidden lg:flex gap-1 bg-slate-50 p-1.5 rounded-2xl border border-slate-200/50">
             {[
               { id: 'portfolio', label: 'Портфолио' },
               { id: 'pricing', label: 'Цены' }
@@ -479,7 +487,7 @@ export default function App() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={cn(
                   "px-8 py-2.5 rounded-xl text-[10px] font-black transition-all uppercase tracking-widest",
-                  activeTab === tab.id ? "bg-emerald-600 text-white shadow-xl shadow-emerald-500/20" : "text-slate-500 hover:text-slate-950"
+                  activeTab === tab.id ? "bg-[#00a86b] text-white shadow-lg" : "text-slate-500 hover:text-slate-950"
                 )}
               >
                 {tab.label}
@@ -487,38 +495,45 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center">
             <button 
               onClick={() => setIsContactOpen(true)}
-              className="sleek-button-primary px-8"
+              className="bg-slate-950 text-white px-7 sm:px-12 py-3.5 sm:py-6 rounded-2xl text-[10px] sm:text-[15px] font-black uppercase tracking-tight hover:bg-[#00a86b] transition-all shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] active:scale-95"
             >
               Начать проект
             </button>
           </div>
+
         </div>
       </header>
 
       {/* MOBILE BOTTOM NAV */}
-          <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-950/90 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-1 z-50 shadow-2xl">
-        {[
-          { id: 'portfolio', label: 'Портфолио', icon: Briefcase },
-          { id: 'pricing', label: 'Цены', icon: Zap }
-        ].map((tab) => (
-          <button 
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={cn(
-              "flex flex-col items-center gap-1 px-4 sm:px-8 py-2 rounded-xl transition-all",
-              activeTab === tab.id ? "bg-emerald-600 text-white" : "text-white/60 hover:text-white"
-            )}
-          >
-            <tab.icon size={16} />
-            <span className="text-[8px] font-bold uppercase tracking-widest">{tab.label}</span>
-          </button>
-        ))}
+      <nav className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bg-[#1a1b1e]/98 backdrop-blur-2xl border border-white/5 p-2 rounded-3xl flex gap-2 z-50 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+        <button 
+          onClick={() => { setActiveTab('portfolio'); window.scrollTo({top:0, behavior:'smooth'}); }}
+          className={cn(
+            "flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-all active:scale-95",
+            activeTab === 'portfolio' ? "bg-[#00a86b] text-white" : "text-white/40"
+          )}
+        >
+          <Briefcase size={18} strokeWidth={2.5} />
+          <span className="text-[9px] font-black uppercase tracking-widest">Портфолио</span>
+        </button>
+        <button 
+          onClick={() => { setActiveTab('pricing'); window.scrollTo({top:0, behavior:'smooth'}); }}
+          className={cn(
+            "flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-all active:scale-95",
+            activeTab === 'pricing' ? "bg-[#00a86b] text-white" : "text-white/40"
+          )}
+        >
+          <Zap size={18} strokeWidth={2.5} />
+          <span className="text-[9px] font-black uppercase tracking-widest">Цены</span>
+        </button>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 py-12 md:py-24">
+
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-24 space-y-0">
         <AnimatePresence mode="wait">
           {activeTab === 'portfolio' && (
             <motion.div 
@@ -529,122 +544,118 @@ export default function App() {
               className="space-y-32"
             >
               {/* HERO / BUSINESS CARD STYLE */}
-              <section className="flex flex-col lg:flex-row gap-16 lg:items-center">
-                <div className="flex-1 space-y-8">
-                  <div className="space-y-4">
-                    <span className="inline-block px-4 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-widest rounded-full border border-emerald-100">
-                       Senior IT-Architect • Highload & Security Expert
-                    </span>
+              <section className="flex flex-col lg:flex-row gap-10 lg:gap-16 lg:items-center py-4 sm:py-12">
+                <div className="flex-1 space-y-6 sm:space-y-8">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-950 text-white text-[8px] sm:text-[10px] font-mono font-bold uppercase tracking-widest rounded-full">
+                       <ShieldCheck size={10} className="sm:size-[12px] text-emerald-400" />
+                        CORE_ENGINE: ACTIVE
+                    </div>
                       <motion.h2 
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        className="text-[clamp(2.5rem,8vw,6.5rem)] font-black tracking-tighter text-slate-950 leading-[0.85] uppercase break-words text-balance"
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-[clamp(1.5rem,8vw,6rem)] font-black tracking-tighter text-slate-950 leading-[0.9] uppercase text-balance"
                       >
-                        SEBIEV <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-emerald-500 to-cyan-500">FULLSTACK.</span>
+                        SENIOR IT-ARCHITECT • <span className="text-[#00a86b] italic">HIGHLAND & SECURITY EXPERT.</span>
                       </motion.h2>
-                    <p className="text-xl text-slate-500 max-w-2xl font-medium leading-relaxed">
-                      Любые системы: CMS, Bitrix или кастомный код. 
-                      Фокус на окупаемости и техническом совершенстве.
+
+                    <p className="text-sm sm:text-xl text-slate-500 max-w-2xl font-serif italic leading-relaxed text-balance">
+                      Разработка цифровой архитектуры для Highload систем и кастомных UI. Фокус на техническое превосходство и бизнес-эффективность.
                     </p>
                   </div>
 
                   <div className="flex flex-wrap gap-4">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 sm:p-8 sleek-card w-full sm:w-auto relative group overflow-hidden border-emerald-100/50">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 sm:p-8 sleek-card w-full sm:w-auto relative group overflow-hidden border-slate-100 technical-grid">
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex flex-col relative z-10 transition-transform group-hover:translate-x-1">
-                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1">Elite Engineering Rate</span>
-                        <span className="text-3xl font-black text-slate-950 tracking-tighter italic">250 000 ₽ <span className="text-sm not-italic opacity-40">+</span></span>
+                        <span className="text-[9px] font-mono font-bold text-emerald-600/50 uppercase tracking-[0.2em] mb-1">ENTRY_RATE</span>
+                        <span className="text-2xl sm:text-3xl font-mono font-bold text-slate-950 tracking-tighter italic">250K <span className="text-xs font-mono not-italic opacity-30">RUB+</span></span>
                       </div>
-                      <div className="hidden sm:block w-px h-12 bg-slate-200 relative z-10 mx-4" />
+                      <div className="hidden sm:block w-px h-10 bg-slate-100 relative z-10 mx-2" />
                       <div className="flex flex-col relative z-10 transition-transform group-hover:translate-x-1">
-                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1">Projects Launched</span>
-                        <span className="text-3xl font-black text-slate-950 tracking-tighter italic">100 <span className="text-sm not-italic opacity-40">+</span></span>
+                        <span className="text-[9px] font-mono font-bold text-emerald-600/50 uppercase tracking-[0.2em] mb-1">UNITS_SHIPPED</span>
+                        <span className="text-2xl sm:text-3xl font-mono font-bold text-slate-950 tracking-tighter italic">100<span className="text-xs font-mono not-italic opacity-30">.EXE</span></span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="grid grid-cols-1 sm:flex lg:flex-row gap-3 sm:gap-4">
                      <button 
                        onClick={() => setIsContactOpen(true)}
-                       className="flex-1 sleek-button-primary flex items-center justify-center gap-3 py-4 shadow-xl shadow-emerald-200 active:scale-95 transition-all"
+                       className="flex-1 sleek-button-primary flex items-center justify-center gap-3 py-4 sm:py-5 shadow-xl shadow-emerald-500/10 active:scale-95 transition-all text-xs sm:text-sm"
                      >
-                       <AnimatedIcon icon={MessageSquare} size={20} />
-                       <span className="font-black uppercase tracking-tighter">Обсудить проект</span>
+                       <AnimatedIcon icon={MessageSquare} size={18} />
+                       <span className="font-black uppercase tracking-widest">Обсудить задачу</span>
                      </button>
                      <a 
                        href="tel:89259409404" 
-                       className="flex-1 sleek-button-secondary flex items-center justify-center gap-3 py-4 border-slate-200 active:scale-95 transition-all"
+                       className="flex-1 sleek-button-secondary bg-white flex items-center justify-center gap-3 py-4 sm:py-5 border-slate-200 active:scale-95 transition-all text-xs sm:text-sm"
                      >
-                       <AnimatedIcon icon={Phone} size={20} />
-                       <span className="font-black uppercase tracking-tighter">Связаться голосом</span>
+                       <AnimatedIcon icon={Phone} size={18} />
+                       <span className="font-black uppercase tracking-widest">Позвонить</span>
                      </a>
                      <button 
                        onClick={sharePortfolio} 
-                       className="w-14 h-14 hidden sm:flex items-center justify-center bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors shrink-0 shadow-sm"
+                       className="w-14 h-14 hidden lg:flex items-center justify-center bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors shrink-0 shadow-sm"
                      >
-                       <AnimatedIcon icon={Share2} size={20} />
+                       <AnimatedIcon icon={Share2} size={18} />
                      </button>
                   </div>
                 </div>
 
-                <div className="w-full lg:w-1/3 order-first lg:order-last">
-                  <div className="bg-emerald-600 p-6 sm:p-10 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group border border-white/20">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <motion.div 
-                      animate={{ rotate: [0, 10, 0] }}
-                      transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-                      className="absolute -top-6 -right-6 text-white/10 blur-sm"
-                    >
-                      <ShieldCheck size={120} />
-                    </motion.div>
-                    <h4 className="text-xl sm:text-2xl font-black mb-6 uppercase italic">Архитектура стека</h4>
-                    <div className="space-y-6">
-                      {[
-                        { label: 'Стабильность сервера', val: 'Enterprise (NestJS)', icon: Code2, color: 'text-white' },
-                        { label: 'Uptime 99.9%', val: 'K8s Масштабирование', icon: Server, color: 'text-white' },
-                        { label: 'Скорость доступа', val: 'Low-latency архитектура', icon: Database, color: 'text-white' },
-                        { label: 'Интерфейс', val: 'High-End UX/UI системы', icon: Globe, color: 'text-white' }
-                      ].map((s, i) => (
-                        <div key={i} className="flex gap-4 items-start">
-                          <div className={cn("p-2 bg-white/10 rounded-lg shrink-0 border border-white/20", s.color)}><s.icon size={16} /></div>
-                          <div className="space-y-1">
-                            <div className="text-[10px] font-bold text-emerald-100 uppercase tracking-widest">{s.label}</div>
-                            <div className="text-sm font-bold text-white">{s.val}</div>
+                <div className="w-full lg:w-[420px] order-first lg:order-last">
+                  <div className="bg-[#00a86b] p-8 sm:p-14 rounded-[3.2rem] sm:rounded-[4rem] text-white shadow-2xl relative overflow-hidden group border border-white/10">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="space-y-12 relative z-10">
+                      <h4 className="text-[26px] sm:text-4xl font-black uppercase italic tracking-tighter leading-none">АРХИТЕКТУРА СТЕКА</h4>
+                      <div className="space-y-9">
+                        {[
+                          { label: 'СТАБИЛЬНОСТЬ СЕРВЕРА', val: 'Enterprise (NestJS)', icon: Code2 },
+                          { label: 'UPTIME 99.9%', val: 'K8s Масштабирование', icon: Server },
+                          { label: 'СКОРОСТЬ ДОСТУПА', val: 'Low-latency архитектура', icon: Database },
+                          { label: 'ИНТЕРФЕЙС', val: 'High-End UX/UI системы', icon: Globe }
+                        ].map((s, i) => (
+                          <div key={i} className="flex gap-5 items-center">
+                            <div className="w-14 h-14 flex items-center justify-center bg-white/15 rounded-2xl border border-white/20 shrink-0 shadow-lg"><s.icon size={22} /></div>
+                            <div className="space-y-1">
+                              <div className="text-[11px] font-bold text-white/60 uppercase tracking-widest leading-none">{s.label}</div>
+                              <div className="text-lg sm:text-2xl font-black text-white uppercase tracking-tight leading-none">{s.val}</div>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-8 pt-8 border-t border-white/20 flex justify-between items-center text-[10px] font-mono text-emerald-100">
-                      <span>ЛИЦЕНЗИРОВАН</span>
-                      <span>v2.1.25</span>
+                        ))}
+                      </div>
+                      <div className="mt-12 pt-10 border-t border-white/10 flex justify-between items-center text-[11px] font-black text-white/50 uppercase tracking-[0.2em]">
+                        <span>ЛИЦЕНЗИРОВАН</span>
+                        <span>v2.1.25</span>
+                      </div>
                     </div>
                   </div>
                 </div>
+
+
               </section>
 
               {/* EXPERIENCE & PROJECTS */}
-              <section>
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
                   <SectionHeading 
                     subtitle="Кейсы с подтвержденной окупаемостью и масштабируемостью."
                     hasDiscount
                   >
-                    Инвестиционное портфолио
+                    Ключевые проекты
                   </SectionHeading>
-                  <div className="flex gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto pb-2 md:pb-1 scrollbar-hide">
+                  <div className="flex gap-2 p-1 bg-slate-100/50 rounded-xl overflow-x-auto pb-1 scrollbar-hide">
                     {[
-                      { id: 'All', label: 'Все' },
-                      { id: 'Backend', label: 'Бэкенд' },
-                      { id: 'Web', label: 'Веб' },
-                      { id: 'Infra', label: 'Инфра' }
+                      { id: 'All', label: 'Все проекты' },
+                      { id: 'Backend', label: 'Сервер' },
+                      { id: 'Web', label: 'Веб-системы' }
                     ].map(f => (
                       <button 
                         key={f.id}
                         onClick={() => setProjectFilter(f.id as any)}
-                        aria-label={`Фильтровать по ${f.label}`}
                         className={cn(
-                          "px-4 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap",
-                          projectFilter === f.id ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                          "px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                          projectFilter === f.id ? "bg-white text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
                         )}
                       >
                         {f.label}
@@ -653,7 +664,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                   {EXPERIENCE.map((job, idx) => (
                     <motion.div 
                       key={idx} 
@@ -708,25 +719,31 @@ export default function App() {
                   ))}
                 </div>
 
-                {/* PROJECT GRID */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
-                  <AnimatePresence>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-8 sm:pt-12">
+                  <AnimatePresence mode="popLayout">
                     {PROJECTS.filter(p => projectFilter === 'All' || p.category === projectFilter).map((proj, i) => (
                       <motion.div 
-                        key={i}
+                        key={proj.title}
                         layout
-                        initial={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        whileHover={{ y: -5, scale: 1.02 }}
-                        className="p-6 bg-white border border-slate-200 rounded-3xl hover:shadow-2xl hover:border-emerald-100 transition-all cursor-default"
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="p-5 sm:p-6 bg-white border border-slate-100 rounded-[1.5rem] sm:rounded-3xl hover:shadow-2xl transition-all h-full flex flex-col justify-between group active:scale-95 touch-manipulation relative overflow-hidden"
                       >
-                        <div className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-2">{proj.category}</div>
-                        <h4 className="font-black text-slate-950 mb-2 uppercase tracking-tighter">{proj.title}</h4>
-                        <p className="text-xs text-slate-500 mb-4 font-medium">{proj.desc}</p>
-                        <div className="flex flex-wrap gap-1">
-                          {proj.tags.map(t => <span key={t} className="px-2 py-0.5 bg-slate-50 text-[9px] font-bold text-slate-400 rounded-md border border-slate-100">{t}</span>)}
+                        <div className="absolute top-0 right-0 p-3">
+                           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/20 group-hover:bg-emerald-500 transition-colors" />
                         </div>
+                        <div>
+                          <div className="text-[7px] sm:text-[10px] font-mono font-bold text-emerald-600 uppercase tracking-widest mb-2">{proj.category}</div>
+                          <h4 className="font-black text-slate-900 text-sm sm:text-base mb-2 uppercase tracking-tighter leading-tight group-hover:text-emerald-600 transition-colors">{proj.title}</h4>
+                          <p className="text-[10px] sm:text-xs text-slate-500 mb-4 font-serif italic leading-relaxed line-clamp-3">{proj.desc}</p>
+                        </div>
+                        <button 
+                          onClick={() => { setIsContactOpen(true); setFormState(prev => ({ ...prev, message: `Интересует кейс: ${proj.title}` })); }}
+                          className="w-full py-3 bg-slate-50 hover:bg-slate-950 hover:text-white rounded-xl text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest transition-all"
+                        >
+                          OPEN_CASE.EXE
+                        </button>
                       </motion.div>
                     ))}
                   </AnimatePresence>
@@ -761,84 +778,76 @@ export default function App() {
 
 
               {/* CALCULATOR SECTION */}
-              <div className="bg-emerald-50 rounded-[3rem] p-8 sm:p-12 lg:p-20 text-slate-900 relative overflow-hidden shadow-sm border border-emerald-100">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-200/20 rounded-full blur-[120px] -mr-32 -mt-32" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-200/20 rounded-full blur-[100px] -ml-32 -mb-32" />
+              <div className="bg-white rounded-[1.5rem] sm:rounded-[3rem] p-5 sm:p-12 lg:p-20 text-slate-900 relative overflow-hidden shadow-2xl border border-slate-100 mb-20 technical-grid">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] -mr-32 -mt-32" />
                 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
-                  <div className="space-y-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 relative z-10">
+                  <div className="space-y-6 sm:space-y-12">
                      <div>
-                       <h3 className="text-3xl font-black mb-4 uppercase tracking-tighter italic">Расчет окупаемости</h3>
-                       <p className="text-slate-500 font-medium">Выберите технологическое ядро и дополнительные модули для точной оценки стоимости.</p>
+                       <h3 className="text-xl sm:text-3xl font-black mb-2 sm:mb-4 uppercase tracking-tighter italic leading-none">Estimate Costs</h3>
+                       <p className="text-[11px] sm:text-base text-slate-500 font-serif italic leading-relaxed">Настройте параметры проекта для мгновенного технического расчета сметы.</p>
                      </div>
 
-                     <div className="space-y-8">
-                       <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                           <Layers size={12} className="text-emerald-500" />
-                           Технологическое ядро
+                     <div className="space-y-6 sm:space-y-8">
+                       <div className="space-y-3">
+                         <label className="text-[8px] sm:text-[10px] font-mono font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 pl-1">
+                           <Layers size={10} className="text-emerald-500" />
+                           CORE_STACK
                          </label>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                            {CALCULATOR_OPTIONS.cms.map(c => (
                              <button 
                                key={c.id} 
                                onClick={() => setCalcCMS(c.id)}
                                className={cn(
-                                 "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden group min-h-[140px] flex flex-col justify-between",
-                                 calcCMS === c.id ? "bg-white text-slate-950 border-emerald-200 shadow-xl scale-[1.02]" : "bg-white/50 border-slate-200 hover:border-emerald-300 hover:bg-white"
+                                 "px-4 py-3 rounded-xl border text-left transition-all relative overflow-hidden flex flex-col justify-between min-h-[65px] sm:min-h-[140px] active:scale-95 touch-manipulation",
+                                 calcCMS === c.id ? "bg-slate-950 text-white border-slate-950 shadow-xl" : "bg-white border-slate-100"
                                )}
                              >
-                                {calcCMS === c.id && <motion.div layoutId="calcCMSactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600" />}
-                                <div className="space-y-1">
-                                  <div className="text-sm font-black uppercase tracking-tighter">{c.label}</div>
-                                  <div className={cn("text-[9px] font-medium leading-tight pr-2", calcCMS === c.id ? "text-slate-500" : "text-slate-400")}>
+                                <div className="space-y-0.5">
+                                  <div className="text-[10px] sm:text-sm font-mono font-bold uppercase tracking-tight leading-none">{c.label}</div>
+                                  <div className={cn("text-[8px] font-serif italic leading-none opacity-40 hidden sm:block", calcCMS === c.id ? "text-white" : "text-slate-400")}>
                                     {c.desc}
                                   </div>
                                 </div>
-                                <div className={cn("mt-4 text-xs font-mono font-bold", calcCMS === c.id ? "text-emerald-600" : "text-emerald-500")}>
-                                  {c.price > 0 ? `${c.price.toLocaleString()} ₽` : 'Стандарт индустрии'}
+                                <div className={cn("mt-1 text-[9px] font-mono font-bold tracking-widest uppercase", calcCMS === c.id ? "text-emerald-400" : "text-emerald-600")}>
+                                  {c.price > 0 ? `${c.price.toLocaleString()} RUB` : 'BASIS'}
                                 </div>
                              </button>
                            ))}
                          </div>
                        </div>
 
-                       <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                       <div className="space-y-3 sm:space-y-4">
+                         <label className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 pl-1">
                            <Zap size={12} className="text-emerald-500" />
-                           Формат разработки
+                           Тип разработки
                          </label>
-                         <div className="flex flex-col sm:flex-row gap-3">
+                         <div className="grid grid-cols-2 gap-2 sm:gap-3">
                            {CALCULATOR_OPTIONS.type.map(t => (
                              <button 
                                key={t.id} 
                                onClick={() => setCalcType(t.id)}
                                className={cn(
-                                 "flex-1 px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left relative overflow-hidden min-h-[100px] flex flex-col justify-between",
-                                 calcType === t.id ? "bg-white text-slate-900 border-emerald-200 shadow-xl scale-[1.02]" : "bg-white/50 border-slate-200 hover:border-emerald-300 hover:bg-white"
+                                 "px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-bold transition-all text-left min-h-[60px] sm:min-h-[80px] active:scale-95 touch-manipulation",
+                                 calcType === t.id ? "bg-slate-950 text-white border-slate-950 shadow-xl" : "bg-white border-slate-100"
                                )}
                              >
-                                {calcType === t.id && <motion.div layoutId="calcTypeactive" className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600" />}
-                                <div className="space-y-1">
-                                  <div className="text-sm font-black uppercase tracking-tighter">{t.label}</div>
-                                  <div className={cn("text-[9px] font-medium leading-tight", calcType === t.id ? "text-slate-500" : "text-slate-400")}>
-                                    {t.desc}
-                                  </div>
-                                </div>
-                                <div className={cn("mt-2 text-[9px] font-mono font-bold", calcType === t.id ? "text-emerald-600" : "text-emerald-500")}>
-                                  {t.price > 0 ? `+ ${t.price.toLocaleString()} ₽` : 'Базовая лицензия'}
+                                <div className="text-[10px] sm:text-sm font-black uppercase tracking-tighter">{t.label}</div>
+                                <div className={cn("mt-1 text-[8px] sm:text-[9px] font-black uppercase", calcType === t.id ? "text-emerald-600" : "text-emerald-400")}>
+                                  {t.price > 0 ? `+ ${t.price.toLocaleString()} ₽` : '0 ₽'}
                                 </div>
                              </button>
                            ))}
                          </div>
                        </div>
 
-                       <div className="space-y-4">
-                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                       <div className="space-y-3 sm:space-y-4">
+                         <label className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 pl-1">
                            <Cpu size={12} className="text-emerald-500" />
-                           Дополнительно
+                           Модули расширения
                          </label>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                            {CALCULATOR_OPTIONS.features.map(f => (
                              <button 
                                key={f.id} 
@@ -848,19 +857,16 @@ export default function App() {
                                  )
                                }}
                                className={cn(
-                                 "px-6 py-4 rounded-2xl border text-sm font-bold transition-all text-left flex justify-between items-center group",
-                                 calcFeatures.includes(f.id) ? "bg-emerald-600 text-white border-emerald-600 shadow-lg" : "bg-white/50 border-slate-200 hover:border-emerald-300 hover:bg-white"
+                                 "px-5 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-bold transition-all text-left flex justify-between items-center",
+                                 calcFeatures.includes(f.id) ? "bg-emerald-600 text-white border-emerald-600 shadow-lg" : "bg-white/50 border-slate-100 hover:border-emerald-200 hover:bg-white"
                                )}
                              >
-                               <div className="w-full">
-                                 <div className="text-sm font-bold flex justify-between items-start mb-1 gap-2">
+                               <div className="flex-1">
+                                 <div className="text-[10px] sm:text-sm font-black uppercase tracking-tighter flex justify-between items-center">
                                    <span>{f.label}</span>
-                                   <PlusCircle size={14} className={cn("transition-transform shrink-0", calcFeatures.includes(f.id) ? "rotate-45" : "")} />
+                                   <PlusCircle size={14} className={cn("transition-transform", calcFeatures.includes(f.id) ? "rotate-45" : "")} />
                                  </div>
-                                 <div className={cn("text-[9px] font-medium leading-tight mb-2", calcFeatures.includes(f.id) ? "text-emerald-100" : "text-slate-400")}>
-                                   {(f as any).desc}
-                                 </div>
-                                 <div className={cn("text-[10px] font-mono", calcFeatures.includes(f.id) ? "text-white" : "text-emerald-600")}>
+                                 <div className={cn("mt-0.5 text-[9px] font-black uppercase opacity-60", calcFeatures.includes(f.id) ? "text-white" : "text-emerald-600")}>
                                    + {f.price.toLocaleString()} ₽
                                  </div>
                                </div>
@@ -871,154 +877,104 @@ export default function App() {
                      </div>
                   </div>
 
-                  <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-between h-fit shadow-2xl border border-emerald-100 relative">
-                    <div className="absolute -top-4 -left-4 flex flex-col gap-2">
-                      <div className="bg-emerald-600 text-white text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
-                        <Tag size={12} />
-                        <span>Скидка -40% активирована</span>
-                      </div>
-                      <div className="bg-white text-slate-900 border border-emerald-100 text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-2">
-                         <ShieldCheck size={12} className="text-emerald-600" />
-                         <span>Гарантия 1 год</span>
-                      </div>
-                    </div>
-                    <div className="space-y-6 pt-4">
-                       <div className="space-y-4">
-                          <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
-                             <span>Состав решения</span>
-                             <span>Инвестиции</span>
+                      <div className="lg:sticky lg:top-32 bg-white text-slate-900 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 flex flex-col justify-between h-fit shadow-2xl border border-slate-100 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600/20" />
+                        <div className="absolute -top-3 -left-3 flex flex-col gap-2 z-20">
+                          <div className="bg-slate-950 text-emerald-400 text-[8px] font-mono font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1">
+                            <Tag size={10} />
+                            <span>SAVINGS: 40%</span>
                           </div>
-                          <div className="space-y-4 max-h-[250px] overflow-y-auto custom-scrollbar pr-2">
-                             <div className="flex justify-between items-center text-sm font-bold">
-                                <span className="text-slate-700">Ядро: {selectedCMS?.label}</span>
-                                <div className="text-right flex flex-col items-end">
-                                  <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">{(selectedCMS?.price || 0).toLocaleString('ru-RU')} ₽</span>
-                                  <span className="text-emerald-600 whitespace-nowrap font-mono tracking-tighter">{((selectedCMS?.price || 0) * 0.6).toLocaleString('ru-RU')} ₽</span>
-                                </div>
-                             </div>
-                             {selectedType && selectedType.price !== 0 && (
-                               <div className="flex justify-between items-center text-sm font-medium">
-                                  <span className="text-slate-500">{selectedType.label}</span>
-                                  <div className="text-right flex flex-col items-end">
-                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">+{selectedType.price.toLocaleString('ru-RU')} ₽</span>
-                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">+{(selectedType.price * 0.6).toLocaleString('ru-RU')} ₽</span>
-                                  </div>
+                        </div>
+                        
+                        <div className="space-y-4 pt-1">
+                           <div className="space-y-3">
+                              <div className="flex justify-between items-center text-[8px] font-mono font-bold text-slate-300 uppercase tracking-[0.2em] border-b border-slate-50 pb-1.5">
+                                 <span>PROJECTION</span>
+                                 <span>BUDGET_EST</span>
+                              </div>
+                              <div className="space-y-2.5 max-h-[140px] sm:max-h-[250px] overflow-y-auto custom-scrollbar pr-1">
+                                 <div className="flex justify-between items-start text-[10px] sm:text-sm font-mono font-bold uppercase tracking-tight">
+                                    <span className="text-slate-800 flex-1">{selectedCMS?.label}</span>
+                                    <span className="text-emerald-600 font-bold">{(calculateTotal()).toLocaleString('ru-RU')} RUB</span>
+                                 </div>
+                                 {selectedFeaturesList.map(f => (
+                                   <div key={f.id} className="flex justify-between items-start text-[9px] sm:text-xs font-mono font-bold uppercase tracking-tight text-slate-400">
+                                     <span className="flex-1">{f.label}</span>
+                                     <span>+{Math.round(f.price * 0.6).toLocaleString('ru-RU')}</span>
+                                   </div>
+                                 ))}
+                              </div>
+                           </div>
+                           
+                           <div className="pt-3 border-t border-dashed border-slate-200">
+                             <div className="text-[8px] font-mono font-bold text-slate-400 uppercase tracking-[0.2em] mb-1.5">INITIAL_BUDGET.SYS</div>
+                             <div className="flex items-baseline gap-2">
+                               <div className="text-2xl sm:text-5xl font-mono font-bold tracking-tighter text-slate-950 leading-none italic">
+                                 {calculateTotal().toLocaleString('ru-RU')} <span className="text-xs font-mono text-slate-300 not-italic">RUB</span>
                                </div>
-                             )}
-                             {selectedFeaturesList.map(f => (
-                               <div key={f.id} className="flex justify-between items-center text-sm font-medium">
-                                  <span className="text-slate-500">{f.label}</span>
-                                  <div className="text-right flex flex-col items-end">
-                                    <span className="line-through text-slate-300 text-[10px] whitespace-nowrap">+{f.price.toLocaleString('ru-RU')} ₽</span>
-                                    <span className="text-slate-900 whitespace-nowrap font-mono tracking-tighter">+{(f.price * 0.6).toLocaleString('ru-RU')} ₽</span>
-                                  </div>
-                               </div>
-                             ))}
-                             
-                             <div className="pt-2 mt-2 border-t border-slate-50 space-y-1">
-                               <div className="flex justify-between text-[10px] font-black text-emerald-600 uppercase">
-                                 <span>SEO Оптимизация</span>
-                                 <span>Включено</span>
-                               </div>
-                               <div className="flex justify-between text-[10px] font-black text-emerald-600 uppercase">
-                                 <span>Безопасность (OWASP)</span>
-                                 <span>Включено</span>
+                               <div className="text-[9px] sm:text-base font-mono font-bold text-slate-300 line-through italic opacity-50">
+                                 {getOriginalTotal().toLocaleString('ru-RU')} RUB
                                </div>
                              </div>
-                          </div>
-                       </div>
-                       
-                       <div className="pt-6 border-t-2 border-dashed border-slate-100 space-y-4">
-                         <div className="flex justify-between items-end">
-                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Итоговая оценка</div>
-                            <div className="text-xs font-bold text-rose-500 uppercase flex items-center gap-1">
-                               <Percent size={10} />
-                               Экономия 40%
-                            </div>
-                         </div>
-                         <div className="flex items-baseline gap-2 flex-wrap">
-                           <div className="text-4xl sm:text-5xl font-bold tracking-tighter text-slate-900 leading-none font-mono whitespace-nowrap">
-                             {calculateTotal().toLocaleString('ru-RU')} <span className="text-xl font-normal text-slate-400">₽</span>
                            </div>
-                           <div className="text-base font-bold text-slate-300 line-through font-mono whitespace-nowrap">
-                             {getOriginalTotal().toLocaleString('ru-RU')} ₽
-                           </div>
-                         </div>
-                       </div>
-
-                       <div className="space-y-3 pt-2">
-                          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                             <span>Срок реализации</span>
-                             <span className="text-slate-900">от 10 рабочих дней</span>
-                          </div>
-                          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                             <span>Тех. поддержка</span>
-                             <span className="text-slate-900">Бесплатно 1 год</span>
-                          </div>
-                       </div>
-                    </div>
-                    <button 
-                      onClick={() => setIsContactOpen(true)}
-                      className="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black text-base mt-10 hover:bg-emerald-700 transition-all active:scale-95 shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-3 uppercase tracking-tighter"
-                    >
-                      <span>Зафиксировать скидку</span>
-                      <ChevronRight size={18} />
-                    </button>
-                  </div>
+                        </div>
+                        <button 
+                          onClick={() => setIsContactOpen(true)}
+                          className="w-full bg-slate-950 text-white py-4 rounded-xl font-mono font-bold text-[10px] sm:text-base mt-5 hover:bg-emerald-600 transition-all shadow-[0_15px_30px_-5px_rgba(0,0,0,0.3)] flex items-center justify-center gap-2 uppercase tracking-widest active:scale-95"
+                        >
+                          <span>EXECUTE_DEAL</span>
+                          <ChevronRight size={14} />
+                        </button>
+                      </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {PRICING_TIERS.map((tier) => {
-                  const originalPriceValue = parseInt(tier.price.replace(/[^\d]/g, ''));
-                  const discountedPrice = Math.round(originalPriceValue * 0.6).toLocaleString('ru-RU');
-                  const originalPrice = originalPriceValue.toLocaleString('ru-RU');
+              <div className="flex flex-col space-y-8">
+                <div className="flex overflow-x-auto pb-8 sm:grid sm:grid-cols-3 gap-4 sm:gap-8 no-scrollbar snap-x snap-mandatory px-4 -mx-4 sm:px-0 sm:mx-0">
+                  {PRICING_TIERS.map((tier) => {
+                    const originalPriceValue = parseInt(tier.price.replace(/[^\d]/g, ''));
+                    const discountedPrice = Math.round(originalPriceValue * 0.6).toLocaleString('ru-RU');
+                    const originalPrice = originalPriceValue.toLocaleString('ru-RU');
 
-                  return (
-                    <motion.div 
-                      key={tier.id} 
-                      whileHover={{ y: -5, scale: 1.01 }}
-                      className={cn("sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden transition-shadow hover:shadow-2xl hover:shadow-emerald-500/10", tier.recommended && "ring-2 ring-slate-900 shadow-2xl")}
-                    >
-                      {tier.recommended && <div className="absolute top-4 right-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Выбор рынка</div>}
-                      <div className="absolute -right-8 top-4 rotate-45 bg-rose-500 text-white text-[8px] font-bold px-8 py-1 uppercase tracking-tighter shadow-lg z-20">Скидка -40%</div>
-                      
-                      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{tier.name}</h4>
-                      <div className="flex flex-col mb-6">
-                        <div className="text-sm font-bold text-slate-300 line-through font-mono whitespace-nowrap">от {originalPrice} ₽</div>
-                        <div className="text-3xl sm:text-4xl font-bold text-slate-900 font-mono tracking-tighter leading-none whitespace-nowrap">от {discountedPrice} ₽</div>
-                      </div>
-                      
-                      <p className="text-sm text-slate-500 mb-8 font-medium min-h-[3rem] leading-relaxed text-balance">{tier.description}</p>
-                      <div className="space-y-4 mb-8 flex-1 w-full">
-                        {tier.features.map((f, i) => (
-                          <div key={i} className="flex items-start gap-3 text-sm font-bold text-slate-700">
-                            <CheckCircle2 size={18} className="text-emerald-500 shrink-0 mt-0.5" />
-                            <span className="leading-tight">{f}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="w-full bg-slate-50 p-4 rounded-xl mb-8 space-y-2 border border-slate-100">
-                         <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
-                            <ShieldCheck size={12} />
-                            <span>Безопасность (Enterprise)</span>
-                         </div>
-                         <div className="flex items-center gap-2 text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
-                            <TrendingUp size={12} />
-                            <span>Микроразметка & SEO</span>
-                         </div>
-                      </div>
-
-                      <button 
-                        onClick={() => {setFormState({...formState, tier: tier.name}); setIsContactOpen(true);}}
-                        className={cn("w-full py-4 rounded-xl font-black transition-all active:scale-95 uppercase tracking-widest text-[10px]", tier.recommended ? "bg-emerald-600 text-white shadow-xl shadow-emerald-500/20" : "bg-slate-100 text-slate-600 hover:bg-slate-200")}
+                    return (
+                      <motion.div 
+                        key={tier.id} 
+                        className={cn(
+                          "min-w-[85vw] sm:min-w-0 snap-center sleek-card p-6 sm:p-10 flex flex-col items-start relative overflow-hidden transition-all active:scale-[0.98] border-slate-100",
+                          tier.recommended && "ring-2 ring-slate-950 shadow-2xl bg-white"
+                        )}
                       >
-                        Запустить проект
-                      </button>
-                    </motion.div>
-                  );
-                })}
+                        {tier.recommended && <div className="absolute top-4 left-4 bg-slate-950 text-white text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Recommended</div>}
+                        <div className="absolute -right-10 top-5 rotate-45 bg-rose-500 text-white text-[7px] font-black px-10 py-1 uppercase tracking-widest italic shadow-sm">Sale -40%</div>
+                        
+                        <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 mt-2">{tier.name}</h4>
+                        <div className="flex flex-col mb-6">
+                          <div className="text-[10px] font-black text-slate-200 line-through mb-0.5">от {originalPrice} ₽</div>
+                          <div className="text-2xl sm:text-4xl font-black text-slate-950 italic tracking-tighter leading-none">от {discountedPrice} ₽</div>
+                        </div>
+                        
+                        <div className="space-y-3 mb-8 flex-1 w-full">
+                          {tier.features.map((f, i) => (
+                            <div key={i} className="flex items-start gap-2.5 text-slate-700">
+                              <CheckCircle2 size={12} className="text-emerald-500 shrink-0 mt-0.5" />
+                              <span className="leading-tight uppercase tracking-tight text-[9px] font-bold">{f}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <button 
+                          onClick={() => {setFormState({...formState, tier: tier.name}); setIsContactOpen(true);}}
+                          className={cn(
+                            "w-full py-3.5 rounded-xl font-black transition-all uppercase tracking-widest text-[9px]", 
+                            tier.recommended ? "bg-emerald-600 text-white shadow-lg" : "bg-slate-100 text-slate-600"
+                          )}
+                        >
+                          Выбрать
+                        </button>
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* RETURN TO TOP BUTTON */}
@@ -1053,6 +1009,7 @@ export default function App() {
             <div className="flex gap-4">
               <a href="https://t.me/SebievTL" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all border border-slate-200 shadow-sm"><MessageSquare size={18} /></a>
               <a href="mailto:Ahmed1155@mail.ru" className="w-10 h-10 rounded-xl bg-white flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all border border-slate-200 shadow-sm"><Mail size={18} /></a>
+              <a href="https://github.com/AhmedSebiev" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all border border-slate-200 shadow-sm"><Github size={18} /></a>
             </div>
           </div>
           <div>
@@ -1086,164 +1043,174 @@ export default function App() {
               className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[60]"
             />
             <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-xl bg-white z-[70] shadow-2xl p-6 sm:p-12 flex flex-col overflow-hidden"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 35, stiffness: 400 }}
+              className="fixed right-0 bottom-0 left-0 sm:left-auto top-0 sm:top-0 w-full max-w-xl bg-white z-[100] shadow-2xl flex flex-col overflow-hidden h-full sm:h-full rounded-t-[2.5rem] sm:rounded-none"
             >
-              <div className="flex justify-between items-center mb-6 sm:mb-12 shrink-0 bg-white z-10">
+              {/* PULL BAR ON MOBILE */}
+              <div className="sm:hidden w-full flex justify-center pt-3 pb-2 shrink-0">
+                <div className="w-10 h-1 bg-slate-100 rounded-full" />
+              </div>
+
+              <div className="flex justify-between items-center px-6 sm:px-12 py-3 sm:py-6 shrink-0 bg-white z-20 border-b border-slate-50">
                 <AnimatePresence mode="wait">
                   {!isFormSubmitted ? (
                     <motion.div 
                       key="header-form"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
                     >
-                      <h3 className="text-2xl sm:text-4xl font-bold tracking-tight">Новый проект</h3>
-                      {formState.tier && <span className="text-[10px] font-bold text-emerald-600 uppercase mt-1 block">Тариф: {formState.tier}</span>}
+                      <h3 className="text-xl sm:text-2xl font-black tracking-tight uppercase italic">Новый проект</h3>
+                      {formState.tier && <span className="text-[10px] font-bold text-emerald-600 uppercase mt-0.5 block">Выбран тариф: {formState.tier}</span>}
                     </motion.div>
                   ) : (
                     <motion.div 
                       key="header-success"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
                     >
-                      <h3 className="text-2xl sm:text-4xl font-bold tracking-tight text-emerald-600">Готово!</h3>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white">
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <h3 className="text-xl font-black tracking-tight text-emerald-600 uppercase italic">Отправлено</h3>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
-                <button onClick={closeContact} className="p-2 sm:p-3 hover:bg-slate-100 rounded-full transition-all shrink-0">
-                  <X size={24} />
+                <button 
+                  onClick={closeContact}
+                  className="w-10 h-10 rounded-full hover:bg-slate-50 flex items-center justify-center transition-colors text-slate-400 hover:text-slate-950"
+                >
+                  <X size={20} />
                 </button>
               </div>
 
-              <div 
-                ref={drawerContentRef}
-                className="flex-1 overflow-y-auto pr-2 custom-scrollbar scroll-smooth"
-              >
+              <div className="flex-1 overflow-y-auto px-6 sm:px-12 py-8 sm:py-10 custom-scrollbar overscroll-contain">
                 <AnimatePresence mode="wait">
                   {!isFormSubmitted ? (
                     <motion.form 
                       key="form-fields"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
                       onSubmit={handleApply} 
-                      className="space-y-6 pt-2 pb-10"
+                      className="space-y-8 sm:space-y-10"
                     >
                       {formError && (
                         <motion.div 
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          className="p-3 bg-rose-50 text-rose-600 text-xs font-bold rounded-xl border border-rose-100"
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="p-4 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-rose-100 mb-6"
                         >
                           {formError}
                         </motion.div>
                       )}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
-                        <div className="space-y-1 group relative">
+                      
+                      <div className="space-y-6 sm:space-y-8">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Как вас зовут?</label>
                           <input 
                             required
-                            autoFocus
                             type="text" 
                             name="name"
                             autoComplete="name"
-                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-black text-lg bg-transparent uppercase tracking-tighter" 
-                            placeholder=" "
+                            placeholder="Имя или Название"
+                            className="w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:border-emerald-500 transition-all font-bold text-slate-900 outline-none text-sm sm:text-base shadow-sm" 
                             value={formState.name}
                             onChange={e => setFormState({...formState, name: e.target.value})}
                           />
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-600">
-                             Как вас зовут?
-                          </label>
-                        </div>
-                        <div className="space-y-1 group relative">
-                          <input 
-                            required
-                            type="tel" 
-                            name="tel"
-                            autoComplete="tel"
-                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-black text-lg bg-transparent uppercase tracking-tighter" 
-                            placeholder=" "
-                            value={formState.phone}
-                            onChange={e => setFormState({...formState, phone: e.target.value})}
-                          />
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-600">
-                             Телефон
-                          </label>
-                        </div>
-                      </div>
-                      
-                        <div className="space-y-1 group relative">
-                          <input 
-                            required
-                            type="text" 
-                            name="contact"
-                            autoComplete="off"
-                            className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-black text-lg bg-transparent uppercase tracking-tighter" 
-                            placeholder=" "
-                            value={formState.contact}
-                            onChange={e => setFormState({...formState, contact: e.target.value})}
-                          />
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-600">
-                             Email или Telegram
-                          </label>
                         </div>
 
-                      <div className="space-y-1 group relative">
-                        <textarea 
-                          required
-                          rows={2} 
-                          className="peer w-full py-3 border-b border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors font-bold text-lg resize-none bg-transparent" 
-                          placeholder=" "
-                          value={formState.message}
-                          onChange={e => setFormState({...formState, message: e.target.value})}
-                        />
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 absolute top-0 left-0 transition-all pointer-events-none peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-emerald-500">
-                           Опишите задачу
-                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Телефон</label>
+                            <input 
+                              required
+                              type="tel" 
+                              name="phone"
+                              inputMode="tel"
+                              autoComplete="tel"
+                              placeholder="+7 (___) ___ __ __"
+                              className="w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:border-emerald-500 transition-all font-bold text-slate-900 outline-none text-sm sm:text-base shadow-sm" 
+                              value={formState.phone}
+                              onChange={e => setFormState({...formState, phone: e.target.value})}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Telegram / Email</label>
+                            <input 
+                              required
+                              type="text" 
+                              name="contact"
+                              autoComplete="off"
+                              placeholder="@username / mail"
+                              className="w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:border-emerald-500 transition-all font-bold text-slate-900 outline-none text-sm sm:text-base shadow-sm" 
+                              value={formState.contact}
+                              onChange={e => setFormState({...formState, contact: e.target.value})}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Опишите задачу</label>
+                          <textarea 
+                            required
+                            rows={4} 
+                            placeholder="Расскажите немного о вашем проекте..."
+                            className="w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:border-emerald-500 transition-all font-bold text-slate-900 outline-none resize-none text-sm sm:text-base shadow-sm" 
+                            value={formState.message}
+                            onChange={e => setFormState({...formState, message: e.target.value})}
+                          />
+                        </div>
                       </div>
                       
-                      <div className="pt-6">
+                      <div className="space-y-6 sm:space-y-8 pb-10">
                         <button 
                           disabled={isSubmitting}
                           type="submit" 
                           className={cn(
-                            "w-full bg-slate-900 text-white py-5 rounded-2xl text-lg font-bold shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3 hover:bg-slate-800",
+                            "w-full bg-slate-950 text-white py-4 sm:py-5 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-xs sm:text-sm shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-2 sm:gap-3 hover:bg-emerald-600 group",
                             isSubmitting && "opacity-50 cursor-not-allowed"
                           )}
                         >
                           {isSubmitting ? 'Отправка...' : (
                             <>
-                              <span>Отправить запрос</span>
-                              <Send size={20} />
+                              <span>Обсудить задачу</span>
+                              <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             </>
                           )}
                         </button>
                         
-                        <div className="mt-8 flex flex-col items-center gap-3">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-t border-slate-100 w-full pt-8 text-center">Или свяжитесь напрямую</p>
-                          <div className="flex gap-2 w-full">
+                        <div className="space-y-4 sm:space-y-6">
+                          <div className="flex items-center gap-4">
+                            <div className="h-px bg-slate-100 flex-1" />
+                            <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Мессенджеры</p>
+                            <div className="h-px bg-slate-100 flex-1" />
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3 sm:gap-4">
                             <a 
                               href={`https://t.me/SebievTL?text=${encodeURIComponent(`Привет! Я с сайта ${window.location.host}. Хочу обсудить проект.`)}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 flex items-center justify-center gap-2 text-slate-900 font-bold hover:text-emerald-600 transition-colors py-3 bg-slate-50 rounded-2xl border border-slate-200 hover:bg-white"
+                              className="flex items-center justify-center gap-2 py-3.5 sm:py-4 bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-100 hover:bg-white hover:border-emerald-200 transition-all text-slate-900"
                             >
-                              <MessageSquare size={18} className="text-emerald-500" />
-                              <span>Telegram</span>
+                              <MessageSquare size={16} className="text-emerald-500" />
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Telegram</span>
                             </a>
                             <a 
                               href={`https://wa.me/79259409404?text=${encodeURIComponent(`Привет! Пишу по поводу разработки проекта.`)}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 flex items-center justify-center gap-2 text-slate-900 font-bold hover:text-emerald-600 transition-colors py-3 bg-slate-50 rounded-2xl border border-slate-200 hover:bg-white"
+                              className="flex items-center justify-center gap-2 py-3.5 sm:py-4 bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-100 hover:bg-white hover:border-emerald-200 transition-all text-slate-900"
                             >
-                              <Phone size={18} className="text-emerald-500" />
-                              <span>WhatsApp</span>
+                              <Phone size={16} className="text-emerald-500" />
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">WhatsApp</span>
                             </a>
                           </div>
                         </div>
@@ -1254,47 +1221,38 @@ export default function App() {
                       key="success-message"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center text-center space-y-8 py-4"
+                      className="flex flex-col items-center text-center space-y-10 py-12"
                     >
                       <div className="relative">
-                        <div className="w-24 h-24 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-2xl rotate-3">
-                           <Code2 size={48} className="text-white" />
-                           <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-emerald-600 shadow-lg -rotate-12">
-                              <CheckCircle2 size={16} strokeWidth={3} />
+                        <div className="w-24 h-24 bg-emerald-600 rounded-3xl flex items-center justify-center text-white shadow-2xl rotate-3">
+                           <Rocket size={40} className="text-white" />
+                           <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-white rounded-xl flex items-center justify-center text-emerald-600 shadow-xl border-4 border-emerald-50">
+                              <CheckCircle2 size={20} strokeWidth={3} />
                            </div>
                         </div>
                       </div>
+                      
                       <div className="space-y-3">
-                        <h4 className="text-2xl font-bold text-slate-900">Заявка принята!</h4>
-                        <p className="text-slate-500 font-medium text-sm sm:text-base leading-relaxed">
-                          Спасибо за доверие, {formState.name}! <br/> Я получил данные и отвечу вам в ближайшее время.
+                        <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tighter italic">Заявка в работе</h4>
+                        <p className="text-slate-500 font-medium text-sm leading-relaxed max-w-[280px] mx-auto">
+                           {formState.name}, спасибо! Начинаю изучать данные. Свяжусь в ближайшее время.
                         </p>
                       </div>
 
-                      <div className="w-full grid grid-cols-1 gap-3">
+                      <div className="w-full space-y-3 pt-6">
                          <button 
                            onClick={downloadCP}
-                           className="w-full bg-emerald-600 text-white py-5 rounded-2xl text-lg font-bold shadow-xl shadow-emerald-500/20 transition-all active:scale-95 flex items-center justify-center gap-3 border-2 border-emerald-600 hover:bg-white hover:text-emerald-700 group"
+                           className="w-full bg-emerald-600 text-white py-4 rounded-xl text-xs font-black uppercase tracking-widest shadow-xl shadow-emerald-500/20 transition-all active:scale-95 flex items-center justify-center gap-3 hover:bg-emerald-700"
                          >
-                           <Download size={20} className="group-hover:translate-y-1 transition-transform" />
-                           <span>Скачать КП (PDF)</span>
+                           <Download size={18} />
+                           <span>Скачать смету (PDF)</span>
                          </button>
-
-                         <a 
-                            href={`https://t.me/SebievTL?text=${encodeURIComponent(`Ахмед, я только что отправил расчет проекта с сайта! Меня зовут ${formState.name}.`)}`} 
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full bg-slate-50 text-slate-900 py-5 rounded-2xl text-lg font-bold border border-slate-200 transition-all active:scale-95 flex items-center justify-center gap-3 hover:bg-white hover:border-emerald-200"
-                         >
-                            <MessageSquare size={20} className="text-emerald-500" />
-                            <span>Написать в Telegram</span>
-                         </a>
 
                          <button 
                            onClick={closeContact}
-                           className="w-full text-slate-400 font-bold py-4 hover:text-slate-900 transition-colors uppercase tracking-widest text-[10px]"
+                           className="w-full py-4 text-slate-400 hover:text-slate-900 text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
                          >
-                           Вернуться на сайт
+                           Закрыть окно
                          </button>
                       </div>
                     </motion.div>
@@ -1302,10 +1260,10 @@ export default function App() {
                 </AnimatePresence>
               </div>
 
-              <div className="mt-12 pt-12 border-t border-slate-100">
-                <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                  <span>Ahmed Sebiev</span>
-                  <span>Moscow / 2026</span>
+              <div className="shrink-0 px-12 py-6 bg-slate-50 border-t border-slate-100 hidden sm:block">
+                <div className="flex justify-between items-center text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                  <span>Ahmed Sebiev IT</span>
+                  <span>v2026.05</span>
                 </div>
               </div>
             </motion.div>
