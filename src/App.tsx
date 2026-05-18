@@ -457,16 +457,16 @@ export default function App() {
       
       {/* PROGRESS BAR */}
       {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-3xl w-full overflow-hidden sm:border-b sm:border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-24 flex justify-between items-center relative">
-          <div className="flex items-center gap-3 sm:gap-5 group cursor-pointer" onClick={() => (window.scrollTo({top:0, behavior:'smooth'}), setActiveTab('portfolio'))}>
-            <div className="w-10 h-10 sm:w-16 h-16 bg-[#00a86b] rounded-2xl flex items-center justify-center text-white shadow-xl transition-all hover:rotate-6 shrink-0 active:scale-95">
-               <Cpu size={22} className="sm:hidden" />
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-3xl w-full overflow-hidden border-b border-slate-50 lg:border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 sm:h-24 flex justify-between items-center relative">
+          <div className="flex items-center gap-4 group cursor-pointer" onClick={() => (window.scrollTo({top:0, behavior:'smooth'}), setActiveTab('portfolio'))}>
+            <div className="w-11 h-11 sm:w-16 h-16 bg-[#00a86b] rounded-2xl flex items-center justify-center text-white shadow-xl transition-all hover:rotate-6 shrink-0 active:scale-95">
+               <Cpu size={24} className="sm:hidden" />
                <Cpu size={36} className="hidden sm:block" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-sm sm:text-3xl font-black tracking-tighter text-slate-950 uppercase leading-none">
-                SEBIEV <span className="text-[#00a86b]">FULLSTACK</span>
+              <h1 className="text-xl sm:text-3xl font-black tracking-tighter text-slate-950 uppercase leading-none">
+                SEBIEV <span className="block sm:inline text-[#00a86b]">FULLSTACK</span>
               </h1>
               <div className="flex gap-2 text-[6px] sm:text-[10px] font-mono font-bold text-slate-400 mt-1 uppercase tracking-[0.1em] leading-none items-center">
                 <span>FULLSTACK ENGINEERING</span>
@@ -475,7 +475,6 @@ export default function App() {
               </div>
             </div>
           </div>
-
 
           <nav className="hidden lg:flex gap-1 bg-slate-50 p-1.5 rounded-2xl border border-slate-200/50">
             {[
@@ -498,42 +497,41 @@ export default function App() {
           <div className="flex items-center">
             <button 
               onClick={() => setIsContactOpen(true)}
-              className="bg-slate-950 text-white px-7 sm:px-12 py-3.5 sm:py-6 rounded-2xl text-[10px] sm:text-[15px] font-black uppercase tracking-tight hover:bg-[#00a86b] transition-all shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] active:scale-95"
+              className="bg-slate-950 text-white px-5 sm:px-12 py-3.5 sm:py-6 rounded-2xl text-[12px] sm:text-[15px] font-black uppercase tracking-tight hover:bg-[#00a86b] transition-all shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] active:scale-95 text-center leading-tight sm:leading-normal"
             >
-              Начать проект
+              НАЧАТЬ<br className="sm:hidden" /> ПРОЕКТ
             </button>
           </div>
-
         </div>
       </header>
 
       {/* MOBILE BOTTOM NAV */}
-      <nav className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bg-[#1a1b1e]/98 backdrop-blur-2xl border border-white/5 p-2 rounded-3xl flex gap-2 z-50 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+      <nav className="lg:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[280px] bg-[#1a1b1e] backdrop-blur-2xl border border-white/5 p-1.5 rounded-[2.5rem] flex gap-1 z-50 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]">
         <button 
           onClick={() => { setActiveTab('portfolio'); window.scrollTo({top:0, behavior:'smooth'}); }}
           className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-all active:scale-95",
-            activeTab === 'portfolio' ? "bg-[#00a86b] text-white" : "text-white/40"
+            "flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-[2rem] transition-all active:scale-95",
+            activeTab === 'portfolio' ? "bg-[#00a86b] text-white" : "text-white/30"
           )}
         >
-          <Briefcase size={18} strokeWidth={2.5} />
-          <span className="text-[9px] font-black uppercase tracking-widest">Портфолио</span>
+          <Briefcase size={20} strokeWidth={2.5} />
+          <span className="text-[7px] font-[900] uppercase tracking-[0.15em]">Портфолио</span>
         </button>
         <button 
           onClick={() => { setActiveTab('pricing'); window.scrollTo({top:0, behavior:'smooth'}); }}
           className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-all active:scale-95",
-            activeTab === 'pricing' ? "bg-[#00a86b] text-white" : "text-white/40"
+            "flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-[2rem] transition-all active:scale-95",
+            activeTab === 'pricing' ? "bg-[#00a86b] text-white" : "text-white/30"
           )}
         >
-          <Zap size={18} strokeWidth={2.5} />
-          <span className="text-[9px] font-black uppercase tracking-widest">Цены</span>
+          <Zap size={20} strokeWidth={2.5} />
+          <span className="text-[7px] font-[900] uppercase tracking-[0.15em]">Цены</span>
         </button>
       </nav>
 
 
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-24 space-y-0">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-24 space-y-0 relative z-10">
         <AnimatePresence mode="wait">
           {activeTab === 'portfolio' && (
             <motion.div 
@@ -564,8 +562,8 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 sm:p-8 sleek-card w-full sm:w-auto relative group overflow-hidden border-slate-100 technical-grid">
+                      <div className="flex flex-wrap gap-4 pt-10 sm:pt-0">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 sm:p-8 sleek-card w-full sm:w-auto relative group overflow-hidden border-slate-100 technical-grid">
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex flex-col relative z-10 transition-transform group-hover:translate-x-1">
                         <span className="text-[9px] font-mono font-bold text-emerald-600/50 uppercase tracking-[0.2em] mb-1">ENTRY_RATE</span>
@@ -604,10 +602,10 @@ export default function App() {
                 </div>
 
                 <div className="w-full lg:w-[420px] order-first lg:order-last">
-                  <div className="bg-[#00a86b] p-8 sm:p-14 rounded-[3.2rem] sm:rounded-[4rem] text-white shadow-2xl relative overflow-hidden group border border-white/10">
+                  <div className="bg-[#00a86b] p-8 sm:p-14 rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden group border border-white/10">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="space-y-12 relative z-10">
-                      <h4 className="text-[26px] sm:text-4xl font-black uppercase italic tracking-tighter leading-none">АРХИТЕКТУРА СТЕКА</h4>
+                      <h4 className="text-[28px] sm:text-4xl font-black uppercase italic tracking-tighter leading-none">АРХИТЕКТУРА СТЕКА</h4>
                       <div className="space-y-9">
                         {[
                           { label: 'СТАБИЛЬНОСТЬ СЕРВЕРА', val: 'Enterprise (NestJS)', icon: Code2 },
@@ -616,15 +614,15 @@ export default function App() {
                           { label: 'ИНТЕРФЕЙС', val: 'High-End UX/UI системы', icon: Globe }
                         ].map((s, i) => (
                           <div key={i} className="flex gap-5 items-center">
-                            <div className="w-14 h-14 flex items-center justify-center bg-white/15 rounded-2xl border border-white/20 shrink-0 shadow-lg"><s.icon size={22} /></div>
+                            <div className="w-14 h-14 flex items-center justify-center bg-white/10 rounded-2xl border border-white/20 shrink-0"><s.icon size={22} strokeWidth={1.5} /></div>
                             <div className="space-y-1">
-                              <div className="text-[11px] font-bold text-white/60 uppercase tracking-widest leading-none">{s.label}</div>
+                              <div className="text-[11px] font-bold text-white/50 uppercase tracking-[0.1em] leading-none">{s.label}</div>
                               <div className="text-lg sm:text-2xl font-black text-white uppercase tracking-tight leading-none">{s.val}</div>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-12 pt-10 border-t border-white/10 flex justify-between items-center text-[11px] font-black text-white/50 uppercase tracking-[0.2em]">
+                      <div className="mt-4 pt-10 border-t border-white/10 flex justify-between items-center text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">
                         <span>ЛИЦЕНЗИРОВАН</span>
                         <span>v2.1.25</span>
                       </div>
@@ -668,9 +666,10 @@ export default function App() {
                   {EXPERIENCE.map((job, idx) => (
                     <motion.div 
                       key={idx} 
-                      whileHover={{ y: -5, scale: 1.01 }}
+                      whileHover={{ y: -5 }}
+                      whileTap={{ scale: 0.98 }}
                       layout
-                      className="bg-white border border-slate-100 p-8 sm:p-10 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:shadow-emerald-500/10 transition-all group flex flex-col relative overflow-hidden"
+                      className="bg-white border border-slate-100 p-6 sm:p-10 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:shadow-emerald-500/10 transition-all group flex flex-col relative overflow-hidden active:shadow-inner"
                     >
                       <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
                         <span className="text-6xl font-black font-sans">{idx + 1}</span>
